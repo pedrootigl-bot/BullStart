@@ -1,26 +1,170 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink-950: #060807;
+  --color-ink-900: #0a0d0c;
+  --color-ink-850: #0f1312;
+  --color-ink-800: #141918;
+  --color-ink-700: #1c2321;
+  --color-ink-600: #27302e;
+  --color-ink-500: #3a4542;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-mist-50: #f4f7f6;
+  --color-mist-100: #e3e9e7;
+  --color-mist-300: #b4bfbc;
+  --color-mist-400: #8f9b98;
+  --color-mist-500: #6f7b78;
+
+  --color-brand-300: #7df5b4;
+  --color-brand-400: #46eb93;
+  --color-brand-500: #1fd877;
+  --color-brand-600: #12b562;
+  --color-brand-700: #0c8a4b;
+
+  --color-gold-300: #f0d999;
+  --color-gold-400: #e2c06a;
+  --color-gold-500: #c9a24a;
+
+  --color-danger-400: #ff7a7a;
+  --color-warning-400: #f5c451;
+
+  --shadow-glow: 0 0 0 1px rgb(31 216 119 / 0.25), 0 20px 60px -20px rgb(31 216 119 / 0.35);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-draw: draw 2.4s ease-out forwards;
+  --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
+  --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 1200;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes pulse-soft {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink-950 text-mist-100 antialiased;
+    overflow-x: hidden;
+    /* Palavras longas, e-mails e códigos quebram em vez de alargar colunas de grid/flex. */
+    overflow-wrap: anywhere;
+  }
+
+  h1,
+  h2,
+  h3 {
+    hyphens: auto;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  ::selection {
+    background: rgb(31 216 119 / 0.3);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-400);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  .surface {
+    @apply rounded-2xl border border-white/[0.07] bg-ink-850/80;
+  }
+
+  .surface-raised {
+    @apply rounded-2xl border border-white/[0.08] bg-linear-to-b from-ink-800 to-ink-850;
+  }
+
+  .text-gradient-brand {
+    @apply bg-linear-to-r from-brand-300 via-brand-400 to-brand-500 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-gold {
+    @apply bg-linear-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.2em] text-brand-400 uppercase;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-500) transparent;
+  }
 }

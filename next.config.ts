@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  output: "standalone",
+  poweredByHeader: false,
+  reactStrictMode: true,
+  // Server Actions recebem senhas (login, cadastro, troca de senha): não registrar argumentos no log.
+  logging: { serverFunctions: false },
   turbopack: {
     rules: {
       "*.css": {
