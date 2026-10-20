@@ -50,6 +50,16 @@ export function Navbar({ accessHref }: { accessHref: string }) {
     };
   }, [open]);
 
+  // Em landscape (≥768px) o md já ativava o nav desktop sem espaço; fecha o drawer ao cruzar lg.
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => {
+      if (mq.matches) setOpen(false);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   return (
     <header
       className={cn(
@@ -62,7 +72,7 @@ export function Navbar({ accessHref }: { accessHref: string }) {
       <nav aria-label="Principal" className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
         <Logo />
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-1 lg:flex">
           {LINKS.map((link) => (
             <li key={link.href}>
               <a
@@ -86,7 +96,7 @@ export function Navbar({ accessHref }: { accessHref: string }) {
           ))}
         </ul>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <ButtonLink href={accessHref} size="sm" className="h-10 px-5">
             Acessar Plataforma
           </ButtonLink>
@@ -94,7 +104,7 @@ export function Navbar({ accessHref }: { accessHref: string }) {
 
         <button
           type="button"
-          className="grid size-11 place-items-center rounded-xl text-mist-100 transition-colors hover:bg-white/5 md:hidden"
+          className="grid size-11 place-items-center rounded-xl text-mist-100 transition-colors hover:bg-white/5 lg:hidden"
           aria-expanded={open}
           aria-controls="menu-mobile"
           aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -113,7 +123,7 @@ export function Navbar({ accessHref }: { accessHref: string }) {
             animate="open"
             exit="closed"
             variants={variants.panel}
-            className="h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-white/[0.06] bg-ink-950/95 px-5 pt-6 pb-10 md:hidden"
+            className="h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-white/[0.06] bg-ink-950/95 px-5 pt-6 pb-10 lg:hidden"
           >
             <motion.ul variants={variants.list} className="flex flex-col gap-1">
               {LINKS.map((link) => (

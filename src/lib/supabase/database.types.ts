@@ -1,4 +1,3 @@
-﻿
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
@@ -82,6 +81,33 @@ isOneToOne: false
       columns: ["user_id"]
 isOneToOne: false
       referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"course_quizzes": {
+                  Row: {
+                    "course_id": string,"created_at": string,"description": string,"id": string,"is_published": boolean,"max_attempts": number,"module_id": string,"pass_ratio": number,"title": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "course_id": string,"created_at"?: string,"description"?: string,"id"?: string,"is_published"?: boolean,"max_attempts"?: number,"module_id": string,"pass_ratio"?: number,"title": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "course_id"?: string,"created_at"?: string,"description"?: string,"id"?: string,"is_published"?: boolean,"max_attempts"?: number,"module_id"?: string,"pass_ratio"?: number,"title"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "course_quizzes_course_id_fkey"
+      columns: ["course_id"]
+isOneToOne: false
+      referencedRelation: "courses"
+      referencedColumns: ["id"]
+    },
+                    {
+      foreignKeyName: "course_quizzes_module_id_fkey"
+      columns: ["module_id"]
+isOneToOne: true
+      referencedRelation: "modules"
       referencedColumns: ["id"]
     }
                   ]
@@ -230,6 +256,58 @@ isOneToOne: false
                   }
                   Relationships: [
                     
+                  ]
+                },"quiz_attempts": {
+                  Row: {
+                    "answers": NonNullable<Json>,"created_at": string,"id": string,"passed": boolean,"quiz_id": string,"score_percent": number,"started_at": string,"submitted_at": string | null,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "answers"?: NonNullable<Json>,"created_at"?: string,"id"?: string,"passed"?: boolean,"quiz_id": string,"score_percent"?: number,"started_at"?: string,"submitted_at"?: string | null,"user_id": string
+                  }
+                  Update: {
+                    "answers"?: NonNullable<Json>,"created_at"?: string,"id"?: string,"passed"?: boolean,"quiz_id"?: string,"score_percent"?: number,"started_at"?: string,"submitted_at"?: string | null,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "quiz_attempts_quiz_id_fkey"
+      columns: ["quiz_id"]
+isOneToOne: false
+      referencedRelation: "course_quizzes"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "quiz_attempts_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"quiz_questions": {
+                  Row: {
+                    "correct_index": number,"created_at": string,"id": string,"image_url": string | null,"module_id": string | null,"options": NonNullable<Json>,"position": number,"prompt": string,"quiz_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "correct_index": number,"created_at"?: string,"id"?: string,"image_url"?: string | null,"module_id"?: string | null,"options": NonNullable<Json>,"position": number,"prompt": string,"quiz_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "correct_index"?: number,"created_at"?: string,"id"?: string,"image_url"?: string | null,"module_id"?: string | null,"options"?: NonNullable<Json>,"position"?: number,"prompt"?: string,"quiz_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "quiz_questions_module_id_fkey"
+      columns: ["module_id"]
+isOneToOne: false
+      referencedRelation: "modules"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "quiz_questions_quiz_id_fkey"
+      columns: ["quiz_id"]
+isOneToOne: false
+      referencedRelation: "course_quizzes"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"rate_limits": {
                   Row: {

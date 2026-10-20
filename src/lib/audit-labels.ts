@@ -18,6 +18,8 @@ const AUDIT_LABELS: Record<string, string> = {
   "module_access.revoked": "Acesso manual revogado",
   "certificate.issued": "Certificado emitido",
   "certificate.revoked": "Certificado revogado",
+  "quiz.passed": "Prova do módulo aprovada",
+  "quiz.failed": "Prova do módulo não aprovada",
   "broker.customer_linked": "Conta da corretora vinculada",
   "broker.eligibility_updated": "Elegibilidade da corretora atualizada",
   "broker.deposit_redirect": "Redirecionado para depósito oficial",

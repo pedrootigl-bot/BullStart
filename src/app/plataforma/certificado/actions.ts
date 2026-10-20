@@ -24,6 +24,7 @@ export async function issueCertificateAction(): Promise<IssueActionResult> {
   if (!result.ok) {
     const messages = {
       incomplete: "Conclua todas as aulas obrigatórias para emitir o certificado.",
+      quiz_required: "Aprove todas as provas dos módulos antes de emitir o certificado.",
       missing_name: "Atualize seu nome completo no perfil antes de emitir o certificado.",
       error: "Não foi possível emitir o certificado agora. Tente novamente.",
     } as const;

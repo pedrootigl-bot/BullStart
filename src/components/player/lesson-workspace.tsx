@@ -12,7 +12,14 @@ import { cn } from "@/lib/cn";
 import { formatClock } from "@/lib/format";
 
 type ProgressResponse =
-  | { ok: true; status: "in_progress" | "completed"; watchedSeconds: number; requiredSeconds: number; canComplete: boolean; lastPositionSeconds: number }
+  | {
+      ok: true;
+      status: "in_progress" | "completed";
+      watchedSeconds: number;
+      requiredSeconds: number;
+      canComplete: boolean;
+      lastPositionSeconds: number;
+    }
   | { ok: false; error: { code: string; message: string } };
 
 type NavTarget = { href: string; title: string } | null;
@@ -65,12 +72,13 @@ export function LessonWorkspace({
   const [needsUserPlay, setNeedsUserPlay] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [watched, setWatched] = useState(initialWatched);
+  const [lastPosition, setLastPosition] = useState(initialPosition);
   const [completed, setCompleted] = useState(initiallyCompleted);
   const [completing, setCompleting] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(initialSrc ? null : "Vídeo indisponível para esta aula no momento.");
 
-  const canComplete = completed || watched >= requiredSeconds;
-  const remaining = Math.max(0, requiredSeconds - watched);
+  const canComplete = completed || watched >= requiredSeconds || lastPosition >= requiredSeconds;
+  const remaining = Math.max(0, requiredSeconds - Math.max(watched, lastPosition));
 
   useEffect(() => {
     onWatchProgressChange?.({
@@ -84,23 +92,30 @@ export function LessonWorkspace({
   const flush = useCallback(
     async ({ keepalive = false, force = false }: { keepalive?: boolean; force?: boolean } = {}) => {
       const video = videoRef.current;
-      if (!video || (inflightRef.current && !keepalive)) return;
+      if (!video || (inflightRef.current && !keepalive && !force)) return;
       const claimed = Math.min(120, Math.floor(pendingRef.current));
       if (claimed <= 0 && !force) return;
       pendingRef.current -= claimed;
       inflightRef.current = true;
       try {
+        const position = Math.min(
+          durationSeconds,
+          Math.max(0, Math.floor(Number.isFinite(video.currentTime) ? video.currentTime : 0)),
+        );
         const response = await fetch(`/api/lessons/${lessonId}/progress`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ position: Math.floor(video.currentTime), watchedSeconds: claimed }),
+          body: JSON.stringify({ position, watchedSeconds: claimed }),
           keepalive,
         });
         const body = (await response.json()) as ProgressResponse;
         if (body.ok) {
           setWatched(body.watchedSeconds);
+          setLastPosition(body.lastPositionSeconds);
           if (body.status === "completed") setCompleted(true);
-        } else if (response.status === 401 || response.status === 403) {
+          return body;
+        }
+        if (response.status === 401 || response.status === 403) {
           toast.error(body.error.message);
         }
       } catch {
@@ -108,8 +123,9 @@ export function LessonWorkspace({
       } finally {
         inflightRef.current = false;
       }
+      return null;
     },
-    [lessonId],
+    [durationSeconds, lessonId],
   );
 
   useEffect(() => {
@@ -191,7 +207,30 @@ export function LessonWorkspace({
 
   const onEnded = () => {
     setPlaying(false);
-    void flush({ force: true });
+    const video = videoRef.current;
+    // Garante crédito do trecho final: o servidor libera a conclusão ao detectar o fim do vídeo.
+    if (video) {
+      if (Number.isFinite(video.duration) && video.duration > 0) {
+        video.currentTime = video.duration;
+      }
+      const remainingWatch = Math.max(0, durationSeconds - Math.floor(watched));
+      pendingRef.current = Math.max(pendingRef.current, remainingWatch, 1);
+      lastTimeRef.current = durationSeconds;
+    }
+    void (async () => {
+      await flush({ force: true });
+      try {
+        const response = await fetch(`/api/lessons/${lessonId}/complete`, { method: "POST" });
+        const body = (await response.json()) as { ok: boolean };
+        if (body.ok) {
+          setCompleted(true);
+          toast.success("Aula concluída! Seu progresso foi atualizado.");
+          router.refresh();
+        }
+      } catch {
+        /* o botão manual continua disponível */
+      }
+    })();
   };
 
   const onError = async () => {
@@ -238,7 +277,8 @@ export function LessonWorkspace({
     }
   };
 
-  const watchedPercent = requiredSeconds > 0 ? Math.min(100, (watched / requiredSeconds) * 100) : 100;
+  const progressSeconds = Math.max(watched, lastPosition);
+  const watchedPercent = requiredSeconds > 0 ? Math.min(100, (progressSeconds / requiredSeconds) * 100) : 100;
 
   return (
     <div className="flex flex-col gap-5">
@@ -333,6 +373,11 @@ export function LessonWorkspace({
               onClick={markComplete}
               disabled={!canComplete || completing}
               aria-busy={completing}
+              title={
+                canComplete
+                  ? "Marcar esta aula como concluída"
+                  : `Assista ${minWatchPercent}% da aula sem pular, ou vá até o final do vídeo (faltam ${formatClock(remaining)}).`
+              }
               className="order-first col-span-2 w-full sm:order-none sm:col-span-1 sm:w-auto"
             >
               {completing ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <CheckCircle2 className="size-4" aria-hidden="true" />}

@@ -2,19 +2,23 @@ import { BookOpen, Clock, PlayCircle } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ComingSoonModules } from "@/components/platform/coming-soon-modules";
 import { LessonCard, LockedModulePanel, ModuleHeader } from "@/components/platform/module-blocks";
+import { ModuleQuizSection } from "@/components/platform/module-quiz-section";
 import { RequirementList } from "@/components/platform/requirement-list";
 import { ButtonLink } from "@/components/ui/button";
 import { ModuleLockOverlay } from "@/components/ui/module-lock-overlay";
 import { Breadcrumbs, EmptyState } from "@/components/ui/misc";
 import { getStudentContext } from "@/lib/access/student";
+import { isLaunchVisibleModule } from "@/lib/catalog/launch";
 import { formatDuration, moduleNumber } from "@/lib/format";
+import { loadModuleQuiz } from "@/lib/quiz/service";
 
 export const metadata: Metadata = { title: "Módulo" };
 
 export default async function ModulePage({ params }: PageProps<"/plataforma/modulo/[slug]">) {
   const { slug } = await params;
-  const { snapshot, depositConfigured } = await getStudentContext(`/plataforma/modulo/${slug}`);
+  const { session, snapshot, depositConfigured } = await getStudentContext(`/plataforma/modulo/${slug}`);
   if (!snapshot) {
     return (
       <EmptyState icon={<BookOpen className="size-6" />} title="Formação indisponível" description="Os módulos ainda não foram publicados." />
@@ -24,6 +28,19 @@ export default async function ModulePage({ params }: PageProps<"/plataforma/modu
   const current = snapshot.modules.find((m) => m.slug === slug);
   if (!current) notFound();
 
+  if (!isLaunchVisibleModule(current.position)) {
+    return (
+      <div className="flex flex-col gap-8">
+        <Breadcrumbs items={[{ label: "Minha formação", href: "/plataforma" }, { label: "Em breve" }]} />
+        <ComingSoonModules />
+        <Link href="/plataforma" className="text-sm font-medium text-brand-400 hover:text-brand-300">
+          ← Voltar para a formação
+        </Link>
+      </div>
+    );
+  }
+
+  const quiz = await loadModuleQuiz(snapshot, session.profile.id, slug);
   const firstPending = current.lessons.find((l) => snapshot.progressByLesson.get(l.id)?.status !== "completed") ?? current.lessons[0];
 
   return (
@@ -107,6 +124,8 @@ export default async function ModulePage({ params }: PageProps<"/plataforma/modu
           </div>
         )}
       </section>
+
+      {current.access.unlocked ? <ModuleQuizSection quiz={quiz} embedForm /> : null}
 
       <Link href="/plataforma" className="text-sm font-medium text-brand-400 hover:text-brand-300">
         ← Voltar para a formação

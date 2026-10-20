@@ -34,13 +34,13 @@ export async function POST(request: Request, ctx: RouteContext<"/api/lessons/[id
 
   if (!result.data.ok) {
     const missing = Math.max(0, (result.data.required_seconds ?? 0) - (result.data.watched_seconds ?? 0));
-    return jsonError(
-      409,
-      result.data.reason ?? "not_allowed",
-      missing > 0
-        ? `Assista mais ${Math.ceil(missing / 60)} min da aula para concluí-la.`
-        : "A aula ainda não atende ao critério mínimo de visualização.",
-    );
+    const hint =
+      missing >= 60
+        ? `Assista mais cerca de ${Math.ceil(missing / 60)} min da aula (sem pular) para concluí-la.`
+        : missing > 0
+          ? `Assista mais ${missing}s da aula (sem pular) ou vá até o final do vídeo para concluí-la.`
+          : "Assista pelo menos 80% da aula ou vá até o final do vídeo para concluí-la.";
+    return jsonError(409, result.data.reason ?? "not_allowed", hint);
   }
 
   return NextResponse.json({ ok: true, already: Boolean(result.data.already) });

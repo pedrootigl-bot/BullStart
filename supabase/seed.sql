@@ -117,7 +117,7 @@ insert into public.module_requirements (module_id, requirement_type, config_json
   ('d0000000-0000-4000-8000-000000000006', 'PREVIOUS_MODULE', '{"version": 1, "min_completion_percent": 100}');
 
 -- Aulas: Módulo 01 usa vídeos reais (npm run seed:module01); demais módulos usam demos (npm run seed:videos)
-insert into public.lessons (module_id, title, description, objectives, topics, video_provider, video_asset_id, duration_seconds, position, is_published)
+insert into public.lessons (module_id, title, description, objectives, topics, video_provider, video_asset_id, thumbnail_url, duration_seconds, position, is_published)
 select
   ('d0000000-0000-4000-8000-00000000000' || l.module_no)::uuid,
   l.title,
@@ -129,6 +129,10 @@ select
     when l.module_no = 1 then 'module-01/aula-0' || l.position || '.mp4'
     when l.position % 2 = 1 then 'demo/aula-demo-a.mp4'
     else 'demo/aula-demo-b.mp4'
+  end,
+  case
+    when l.module_no = 1 then '/thumbs/module-01/aula-0' || l.position || '.png'
+    else null
   end,
   case
     when l.module_no = 1 and l.position = 1 then 87
@@ -193,3 +197,154 @@ from (values
   (6, 4, 'Consistência no longo prazo', 'Disciplina, revisão e evolução contínua.',
      array['Construir hábitos consistentes'], array['Disciplina', 'Evolução'])
 ) as l(module_no, position, title, description, objectives, topics);
+
+-- ---------------------------------------------------------------------------
+-- Provas por módulo (1 quiz × 5 questões cada; aprovação ≥70%, 3 tentativas)
+-- ---------------------------------------------------------------------------
+insert into public.course_quizzes (id, course_id, module_id, title, description, pass_ratio, max_attempts, is_published) values
+  (
+    'e0000000-0000-4000-8000-000000000001',
+    'c0000000-0000-4000-8000-000000000001',
+    'd0000000-0000-4000-8000-000000000001',
+    'Prova — Introdução ao Mercado Financeiro',
+    'Avalie o que aprendeu neste módulo. A aprovação conta para o certificado da formação.',
+    0.70, 3, true
+  ),
+  (
+    'e0000000-0000-4000-8000-000000000002',
+    'c0000000-0000-4000-8000-000000000001',
+    'd0000000-0000-4000-8000-000000000002',
+    'Prova — Fundamentos do Trading',
+    'Avalie o que aprendeu neste módulo. A aprovação conta para o certificado da formação.',
+    0.70, 3, true
+  ),
+  (
+    'e0000000-0000-4000-8000-000000000003',
+    'c0000000-0000-4000-8000-000000000001',
+    'd0000000-0000-4000-8000-000000000003',
+    'Prova — Leitura de Gráficos e Candlesticks',
+    'Avalie o que aprendeu neste módulo. A aprovação conta para o certificado da formação.',
+    0.70, 3, true
+  ),
+  (
+    'e0000000-0000-4000-8000-000000000004',
+    'c0000000-0000-4000-8000-000000000001',
+    'd0000000-0000-4000-8000-000000000004',
+    'Prova — Indicadores e Análise Técnica',
+    'Avalie o que aprendeu neste módulo. A aprovação conta para o certificado da formação.',
+    0.70, 3, true
+  ),
+  (
+    'e0000000-0000-4000-8000-000000000005',
+    'c0000000-0000-4000-8000-000000000001',
+    'd0000000-0000-4000-8000-000000000005',
+    'Prova — Gerenciamento de Risco',
+    'Avalie o que aprendeu neste módulo. A aprovação conta para o certificado da formação.',
+    0.70, 3, true
+  ),
+  (
+    'e0000000-0000-4000-8000-000000000006',
+    'c0000000-0000-4000-8000-000000000001',
+    'd0000000-0000-4000-8000-000000000006',
+    'Prova — Psicologia e Disciplina do Trader',
+    'Avalie o que aprendeu neste módulo. A aprovação conta para o certificado da formação.',
+    0.70, 3, true
+  );
+
+insert into public.quiz_questions (quiz_id, module_id, prompt, options, correct_index, position, image_url) values
+  -- Módulo 1
+  ('e0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001',
+   'O que é payout?',
+   '["O retorno percentual ou fixo pago sobre o valor investido quando a previsão da operação acerta", "A taxa cobrada pela corretora em toda operação, independente do resultado", "O preço mínimo que o ativo precisa atingir para abrir o gráfico", "O saldo mínimo exigido para criar uma conta na plataforma"]'::jsonb, 0, 1, null),
+  ('e0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001',
+   'Observe a imagem. Em um candlestick, o que a sombra (pavio) superior representa?',
+   '["A máxima atingida no período, acima do corpo da vela", "O preço de abertura da sessão seguinte", "A média móvel simples de 20 períodos", "O volume de contratos em aberto no mercado futuro"]'::jsonb, 0, 2, '/quiz/module-01/q2-candlestick.png'),
+  ('e0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001',
+   'Observe a imagem. Qual é a função principal de um indicador técnico no gráfico?',
+   '["Sintetizar dados de preço e/ou volume para apoiar a leitura de tendência, momentum ou volatilidade", "Garantir a execução automática de ordens com lucro mínimo", "Substituir a necessidade de definir tempo de expiração na operação", "Determinar sozinho o tamanho ideal da posição em cada trade"]'::jsonb, 0, 3, '/quiz/module-01/q3-indicador.png'),
+  ('e0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001',
+   'O que significa compra e venda no mercado de trading?',
+   '["Compra (CALL) antecipa alta do preço; venda (PUT) antecipa queda até o vencimento", "Compra e venda significam apenas transferir saldo entre contas da corretora", "Compra garante lucro; venda cancela automaticamente a operação anterior", "Compra e venda são nomes de indicadores técnicos obrigatórios no gráfico"]'::jsonb, 0, 4, null),
+  ('e0000000-0000-4000-8000-000000000001', 'd0000000-0000-4000-8000-000000000001',
+   'Em uma operação de compra (CALL) em opções binárias, o trader espera que, no vencimento, o preço do ativo esteja:',
+   '["Acima do preço de exercício (strike)", "Abaixo do preço de exercício (strike)", "Igual ao volume médio negociado no dia", "Indefinido, pois CALL não possui direção de preço"]'::jsonb, 0, 5, null),
+  -- Módulo 2
+  ('e0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002',
+   'O que é uma ordem de mercado?',
+   '["Uma ordem executada ao preço disponível no momento", "Uma ordem que nunca é executada", "Um documento de identidade", "Uma taxa cobrada só aos finais de semana"]'::jsonb, 0, 1, null),
+  ('e0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002',
+   'Por que a liquidez importa para o trader?',
+   '["Facilita entrar e sair de posições com menor atrito de preço", "Garante que o preço só suba", "Elimina a necessidade de stop", "Torna indicadores desnecessários"]'::jsonb, 0, 2, null),
+  ('e0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002',
+   'Qual prática ajuda a estruturar uma rotina de estudos consistente?',
+   '["Horários definidos, revisão de conteúdo e registro do que foi aprendido", "Estudar só depois de grandes perdas", "Ignorar fundamentos e operar no impulso", "Trocar de estratégia a cada minuto"]'::jsonb, 0, 3, null),
+  ('e0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002',
+   'Tipos de operação no trading referem-se principalmente a quê?',
+   '["Estilos e horizontes de tempo (scalping, day trade, swing, etc.)", "Apenas o navegador usado no computador", "A cor do gráfico na tela", "O fuso horário do servidor de e-mail"]'::jsonb, 0, 4, null),
+  ('e0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002',
+   'Qual atitude é mais alinhada a fundamentos sólidos de trading?',
+   '["Conhecer o instrumento, o risco e as regras antes de operar", "Operar o máximo possível sem plano", "Copiar sinais sem entender o motivo", "Aumentar o lote após cada perda"]'::jsonb, 0, 5, null),
+  -- Módulo 3
+  ('e0000000-0000-4000-8000-000000000003', 'd0000000-0000-4000-8000-000000000003',
+   'Em um candlestick, o que representam a máxima e a mínima do período?',
+   '["O volume negociado e o número de operações", "Os extremos de preço alcançados no intervalo", "Apenas a abertura e o fechamento", "O spread cobrado pela corretora"]'::jsonb, 1, 1, null),
+  ('e0000000-0000-4000-8000-000000000003', 'd0000000-0000-4000-8000-000000000003',
+   'O corpo do candle mostra principalmente:',
+   '["A relação entre abertura e fechamento do período", "O número de traders online", "A taxa de corretagem", "O saldo da conta bancária"]'::jsonb, 0, 2, null),
+  ('e0000000-0000-4000-8000-000000000003', 'd0000000-0000-4000-8000-000000000003',
+   'Suporte e resistência são regiões onde:',
+   '["O preço tende a encontrar barreira ou reação com mais frequência", "O gráfico muda de cor automaticamente", "A corretora pausa as operações", "Indicadores deixam de funcionar"]'::jsonb, 0, 3, null),
+  ('e0000000-0000-4000-8000-000000000003', 'd0000000-0000-4000-8000-000000000003',
+   'Padrões gráficos ajudam o trader a:',
+   '["Organizar hipóteses sobre o comportamento do preço", "Garantir 100% de acerto", "Eliminar a gestão de risco", "Substituir o estudo do ativo"]'::jsonb, 0, 4, null),
+  ('e0000000-0000-4000-8000-000000000003', 'd0000000-0000-4000-8000-000000000003',
+   'Um candle de alta (fechamento acima da abertura) sugere, no período:',
+   '["Pressão compradora relativa no intervalo analisado", "Que o mercado nunca mais cairá", "Que o volume foi zero", "Que o stop deve ser removido"]'::jsonb, 0, 5, null),
+  -- Módulo 4
+  ('e0000000-0000-4000-8000-000000000004', 'd0000000-0000-4000-8000-000000000004',
+   'Qual é uma boa prática ao usar indicadores técnicos?',
+   '["Usar o máximo de indicadores possível no mesmo gráfico", "Combiná-los com critério e entender suas limitações", "Ignorar o preço e confiar só no oscilador", "Trocar de indicador a cada operação perdida"]'::jsonb, 1, 1, null),
+  ('e0000000-0000-4000-8000-000000000004', 'd0000000-0000-4000-8000-000000000004',
+   'Médias móveis servem principalmente para:',
+   '["Suavizar o preço e destacar tendência ou regiões dinâmicas", "Prever notícias econômicas", "Calcular imposto de renda", "Definir o nome do ativo"]'::jsonb, 0, 2, null),
+  ('e0000000-0000-4000-8000-000000000004', 'd0000000-0000-4000-8000-000000000004',
+   'Osciladores (como RSI) costumam ajudar a:',
+   '["Avaliar condições de sobrecompra/sobrevenda ou momentum", "Garantir entrada sem stop", "Substituir o gráfico de preços", "Eliminar drawdown"]'::jsonb, 0, 3, null),
+  ('e0000000-0000-4000-8000-000000000004', 'd0000000-0000-4000-8000-000000000004',
+   'Bandas de Bollinger relacionam-se a:',
+   '["Volatilidade e distância estatística em torno de uma média", "Apenas volume de notícias", "O horário de abertura da bolsa de valores física", "O número de módulos do curso"]'::jsonb, 0, 4, null),
+  ('e0000000-0000-4000-8000-000000000004', 'd0000000-0000-4000-8000-000000000004',
+   'Sobre limitações de indicadores, o mais correto é:',
+   '["São ferramentas auxiliares e podem gerar sinais atrasados ou conflitantes", "Nunca erram se configurados uma vez", "Funcionam sem olhar o preço", "Tornam gestão de risco irrelevante"]'::jsonb, 0, 5, null),
+  -- Módulo 5
+  ('e0000000-0000-4000-8000-000000000005', 'd0000000-0000-4000-8000-000000000005',
+   'Na gestão de risco, qual atitude protege melhor o capital?',
+   '["Aumentar a exposição após uma sequência de perdas", "Definir tamanho de posição, stop e alvo antes de operar", "Remover o stop para “dar espaço” ao preço", "Operar o maior lote disponível na conta"]'::jsonb, 1, 1, null),
+  ('e0000000-0000-4000-8000-000000000005', 'd0000000-0000-4000-8000-000000000005',
+   'O tamanho de posição deve considerar principalmente:',
+   '["O risco aceitável por operação em relação ao capital", "A cor preferida do gráfico", "O número de indicadores na tela", "A velocidade da internet"]'::jsonb, 0, 2, null),
+  ('e0000000-0000-4000-8000-000000000005', 'd0000000-0000-4000-8000-000000000005',
+   'Stop e alvo, no planejamento, servem para:',
+   '["Definir de antemão onde cortar perda e onde realizar lucro", "Garantir que toda operação seja vencedora", "Evitar qualquer registro no diário", "Aumentar o lote automaticamente"]'::jsonb, 0, 3, null),
+  ('e0000000-0000-4000-8000-000000000005', 'd0000000-0000-4000-8000-000000000005',
+   'Manter um diário de operações ajuda a:',
+   '["Revisar decisões, erros e acertos com disciplina", "Esconder perdas do próprio trader", "Eliminar a necessidade de estudo", "Substituir o gerenciamento de risco"]'::jsonb, 0, 4, null),
+  ('e0000000-0000-4000-8000-000000000005', 'd0000000-0000-4000-8000-000000000005',
+   'Após uma sequência de perdas, a atitude mais prudente é:',
+   '["Revisar o plano e o risco, sem aumentar exposição por impulso", "Dobrar o lote para recuperar rápido", "Desligar o stop em todas as entradas", "Operar sem limite até zerar a conta"]'::jsonb, 0, 5, null),
+  -- Módulo 6
+  ('e0000000-0000-4000-8000-000000000006', 'd0000000-0000-4000-8000-000000000006',
+   'Sobre psicologia e disciplina do trader, qual afirmação é mais adequada?',
+   '["Perdas nunca fazem parte de um plano consistente", "Um plano com regras claras de entrada e saída ajuda a reduzir decisões impulsivas", "Excesso de confiança sempre melhora o resultado", "Revisar operações é desnecessário após as primeiras semanas"]'::jsonb, 1, 1, null),
+  ('e0000000-0000-4000-8000-000000000006', 'd0000000-0000-4000-8000-000000000006',
+   'Vieses comportamentais podem levar o trader a:',
+   '["Tomar decisões irracionais sob emoção ou confirmação seletiva", "Eliminar automaticamente o risco de mercado", "Garantir lucro diário fixo", "Não precisar de plano"]'::jsonb, 0, 2, null),
+  ('e0000000-0000-4000-8000-000000000006', 'd0000000-0000-4000-8000-000000000006',
+   'Lidar melhor com perdas inclui:',
+   '["Aceitá-las como parte estatística do processo e respeitar o risco definido", "Operar mais agressivo até recuperar", "Ignorar o diário de trades", "Culpar apenas a corretora"]'::jsonb, 0, 3, null),
+  ('e0000000-0000-4000-8000-000000000006', 'd0000000-0000-4000-8000-000000000006',
+   'Um plano de trading sustentável prioriza:',
+   '["Regras claras, risco controlado e consistência ao longo do tempo", "Mudança constante de estratégia a cada candle", "Operar 24h sem pausas", "Maximizar lotes em notícias"]'::jsonb, 0, 4, null),
+  ('e0000000-0000-4000-8000-000000000006', 'd0000000-0000-4000-8000-000000000006',
+   'Controle emocional no trading significa principalmente:',
+   '["Seguir o plano mesmo sob pressão, sem reagir por impulso", "Nunca sentir emoção alguma", "Operar só quando estiver irritado", "Desligar o stop em operações longas"]'::jsonb, 0, 5, null);

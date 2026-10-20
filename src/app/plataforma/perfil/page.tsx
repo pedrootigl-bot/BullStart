@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Breadcrumbs, EmptyState } from "@/components/ui/misc";
 import { ProgressBar } from "@/components/ui/progress";
 import { getStudentContext } from "@/lib/access/student";
+import { filterLaunchModules } from "@/lib/catalog/launch";
 import { getActiveCertificate } from "@/lib/certificates/service";
 import { formatDate, formatDateTime, moduleNumber } from "@/lib/format";
 
@@ -111,30 +112,40 @@ export default async function ProfilePage() {
           <h2 id="progresso" className="font-semibold text-mist-50">
             Progresso na formação
           </h2>
-          <div className="mt-4 mb-6">
-            <div className="mb-2 flex justify-between text-sm text-mist-400">
-              <span>Geral</span>
-              <span className="font-medium text-mist-100">{snapshot.overall.percent}%</span>
-            </div>
-            <ProgressBar value={snapshot.overall.percent} label="Progresso geral" />
-          </div>
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {snapshot.modules.map((module) => (
-              <li key={module.id} className="min-w-0 rounded-xl border border-white/[0.06] p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="min-w-0 truncate text-sm text-mist-100">
-                    <span className="text-mist-500">{moduleNumber(module.position)} · </span>
-                    {module.title}
-                  </p>
-                  {!module.access.unlocked && <Badge>Bloqueado</Badge>}
+          {(() => {
+            const visible = filterLaunchModules(snapshot.modules);
+            const completedRequired = visible.reduce((acc, m) => acc + m.progress.completedRequired, 0);
+            const totalRequired = visible.reduce((acc, m) => acc + m.progress.totalRequired, 0);
+            const percent = totalRequired === 0 ? 0 : Math.floor((completedRequired / totalRequired) * 100);
+            return (
+              <>
+                <div className="mt-4 mb-6">
+                  <div className="mb-2 flex justify-between text-sm text-mist-400">
+                    <span>Geral</span>
+                    <span className="font-medium text-mist-100">{percent}%</span>
+                  </div>
+                  <ProgressBar value={percent} label="Progresso geral" />
                 </div>
-                <div className="mt-3 flex items-center gap-3">
-                  <ProgressBar value={module.progress.percent} label={`Progresso do módulo ${module.title}`} size="sm" />
-                  <span className="w-10 text-right text-xs text-mist-400">{module.progress.percent}%</span>
-                </div>
-              </li>
-            ))}
-          </ul>
+                <ul className="grid gap-4 sm:grid-cols-2">
+                  {visible.map((module) => (
+                    <li key={module.id} className="min-w-0 rounded-xl border border-white/[0.06] p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="min-w-0 truncate text-sm text-mist-100">
+                          <span className="text-mist-500">{moduleNumber(module.position)} · </span>
+                          {module.title}
+                        </p>
+                        {!module.access.unlocked && <Badge>Bloqueado</Badge>}
+                      </div>
+                      <div className="mt-3 flex items-center gap-3">
+                        <ProgressBar value={module.progress.percent} label={`Progresso do módulo ${module.title}`} size="sm" />
+                        <span className="w-10 text-right text-xs text-mist-400">{module.progress.percent}%</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            );
+          })()}
         </section>
       ) : (
         <EmptyState icon={<UserRound className="size-6" />} title="Sem progresso" description="A formação ainda não foi publicada." />

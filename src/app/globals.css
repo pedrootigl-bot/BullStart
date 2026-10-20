@@ -2,6 +2,7 @@
 
 @theme {
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, "Times New Roman", serif;
 
   --color-ink-950: #060807;
   --color-ink-900: #0a0d0c;

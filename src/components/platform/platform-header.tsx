@@ -31,6 +31,16 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
     };
   }, [open]);
 
+  // Celular deitado costuma passar de 768px; só mostra nav desktop a partir de lg (1024px).
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => {
+      if (mq.matches) setOpenedAt(null);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   const items: NavItem[] = [
     { href: "/plataforma", label: "Início", icon: Home, exact: true },
     { href: "/plataforma/certificado", label: "Certificado", icon: Award },
@@ -55,7 +65,7 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Logo href="/plataforma" />
 
-        <nav aria-label="Plataforma" className="hidden md:block">
+        <nav aria-label="Plataforma" className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {items.map((item) => (
               <li key={item.href}>
@@ -75,7 +85,7 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           <div className="text-right leading-tight">
             <p className="max-w-40 truncate text-sm font-medium text-mist-50">{name || "Aluno"}</p>
             <p className="max-w-40 truncate text-xs text-mist-500">{email}</p>
@@ -97,7 +107,7 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
 
         <button
           type="button"
-          className="grid size-11 place-items-center rounded-xl text-mist-100 transition-colors hover:bg-white/5 md:hidden"
+          className="grid size-11 place-items-center rounded-xl text-mist-100 transition-colors hover:bg-white/5 lg:hidden"
           aria-expanded={open}
           aria-controls="menu-plataforma"
           aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -118,7 +128,7 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
               onClick={() => setOpenedAt(null)}
-              className="absolute inset-x-0 top-full h-[calc(100dvh-4rem)] bg-ink-950/70 backdrop-blur-sm md:hidden"
+              className="absolute inset-x-0 top-full h-[calc(100dvh-4rem)] bg-ink-950/70 backdrop-blur-sm lg:hidden"
             />
             <motion.div
               id="menu-plataforma"
@@ -127,7 +137,7 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
               animate="open"
               exit="closed"
               variants={variants.panel}
-              className="absolute inset-x-0 top-full max-h-[calc(100dvh-4rem)] overflow-y-auto border-y border-white/[0.06] bg-ink-950 px-4 pt-4 pb-5 shadow-2xl shadow-black/60 md:hidden"
+              className="absolute inset-x-0 top-full max-h-[calc(100dvh-4rem)] overflow-y-auto border-y border-white/[0.06] bg-ink-950 px-4 pt-4 pb-5 shadow-2xl shadow-black/60 lg:hidden"
             >
               <motion.ul variants={variants.list} className="flex flex-col gap-1">
                 <motion.li variants={variants.item} className="mb-2 flex items-center gap-3 rounded-xl bg-white/[0.03] px-3 py-3">

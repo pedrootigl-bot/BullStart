@@ -2,6 +2,7 @@ import { Footer } from "@/components/landing/footer";
 import { Navbar } from "@/components/landing/navbar";
 import { About, CertificateSection, Formation, Hero, type CatalogModule } from "@/components/landing/sections";
 import { getSessionUser } from "@/lib/auth/session";
+import { filterLaunchModules } from "@/lib/catalog/launch";
 import { getEnv } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -24,6 +25,7 @@ export default async function HomePage() {
   const [session, modules] = await Promise.all([getSessionUser().catch(() => null), loadCatalog()]);
   const authenticated = Boolean(session);
   const accessHref = authenticated ? "/plataforma" : "/login";
+  const visibleCount = modules ? filterLaunchModules(modules).length : 0;
   const moduleHref = (slug: string) =>
     authenticated
       ? `/plataforma/modulo/${slug}`
@@ -33,7 +35,7 @@ export default async function HomePage() {
     <>
       <Navbar accessHref={accessHref} />
       <main id="conteudo" className="flex-1">
-        <Hero startHref={accessHref} moduleCount={modules?.length ?? 0} />
+        <Hero startHref={accessHref} moduleCount={visibleCount} />
         <About accessHref={accessHref} />
         <Formation modules={modules} moduleHref={moduleHref} />
         <CertificateSection startHref={accessHref} />

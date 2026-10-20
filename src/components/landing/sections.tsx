@@ -13,12 +13,11 @@ import {
 import type { ReactNode } from "react";
 import { CertificateMockup } from "@/components/certificate/certificate-mockup";
 import { HeroVisual } from "@/components/landing/hero-visual";
-import { LockedModuleAccessButton } from "@/components/landing/locked-module-access";
+import { ComingSoonModulesCta } from "@/components/landing/coming-soon-modules";
+import { filterLaunchModules } from "@/lib/catalog/launch";
 import { ButtonLink, buttonClasses } from "@/components/ui/button";
-import { ModuleLockOverlay } from "@/components/ui/module-lock-overlay";
 import { SectionHeading } from "@/components/ui/misc";
 import { Reveal } from "@/components/ui/reveal";
-import { SnapCarousel } from "@/components/ui/snap-carousel";
 import { cn } from "@/lib/cn";
 import { formatDuration, moduleNumber } from "@/lib/format";
 
@@ -171,6 +170,8 @@ export function Formation({
   modules: CatalogModule[] | null;
   moduleHref: (slug: string) => string;
 }) {
+  const visibleModules = modules ? filterLaunchModules(modules) : null;
+
   return (
     <section id="formacao" className="relative scroll-mt-24 py-24 lg:py-32" aria-labelledby="formacao-title">
       <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
@@ -180,33 +181,27 @@ export function Formation({
             id="formacao-title"
             eyebrow="02 · Formação, aulas e temas"
             title="Uma jornada de aprendizado, do básico ao avançado."
-            description="Módulos sequenciais com aulas objetivas. Alguns módulos possuem requisitos de liberação, apresentados com clareza dentro da plataforma."
+            description="Comece pelo módulo introdutório com aulas objetivas. Novos módulos serão liberados em breve."
           />
         </Reveal>
 
-        {modules === null ? (
+        {visibleModules === null ? (
           <p className="surface mt-12 p-6 text-sm text-mist-400" role="status">
             Não foi possível carregar os módulos agora. Tente novamente em instantes.
           </p>
-        ) : modules.length === 0 ? (
+        ) : visibleModules.length === 0 ? (
           <p className="surface mt-12 p-6 text-sm text-mist-400" role="status">
             Os módulos da formação estão sendo preparados e serão publicados em breve.
           </p>
         ) : (
-          <Reveal className="mt-14">
-            <SnapCarousel itemLabel="o módulo" gridClassName="sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-              {modules.map((module) => {
-                const lockedPreview = module.position >= 2 && module.position <= 6;
-                return (
+          <>
+            <Reveal className="mt-14">
+              <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {visibleModules.map((module) => (
                   <li key={module.module_id}>
                     <article className="surface group relative flex h-full flex-col overflow-hidden p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand-500/30 hover:shadow-glow">
                       <div className="absolute -top-16 -right-16 size-40 rounded-full bg-brand-500/[0.06] blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
-                      <div
-                        className={cn(
-                          "relative flex flex-1 flex-col",
-                          lockedPreview && "pointer-events-none select-none",
-                        )}
-                      >
+                      <div className="relative flex flex-1 flex-col">
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-semibold tracking-widest text-brand-400">
                             MÓDULO {moduleNumber(module.position)}
@@ -240,31 +235,26 @@ export function Formation({
                             ))}
                           </ul>
                         )}
-
-                        {lockedPreview && <ModuleLockOverlay />}
                       </div>
 
                       <div className="relative z-20 mt-auto pt-6">
-                        {lockedPreview ? (
-                          <LockedModuleAccessButton moduleLabel={moduleNumber(module.position)} />
-                        ) : (
-                          <ButtonLink
-                            href={moduleHref(module.slug)}
-                            variant="outline"
-                            size="sm"
-                            className="w-full"
-                            aria-label={`Acessar o módulo ${moduleNumber(module.position)}: ${module.title}`}
-                          >
-                            Acessar <ArrowRight className="size-4" aria-hidden="true" />
-                          </ButtonLink>
-                        )}
+                        <ButtonLink
+                          href={moduleHref(module.slug)}
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          aria-label={`Acessar o módulo ${moduleNumber(module.position)}: ${module.title}`}
+                        >
+                          Acessar <ArrowRight className="size-4" aria-hidden="true" />
+                        </ButtonLink>
                       </div>
                     </article>
                   </li>
-                );
-              })}
-            </SnapCarousel>
-          </Reveal>
+                ))}
+              </ul>
+            </Reveal>
+            <ComingSoonModulesCta />
+          </>
         )}
       </div>
     </section>

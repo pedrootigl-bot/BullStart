@@ -36,9 +36,12 @@ export function ProgressBar({
 
 export function ProgressRing({ value, size = 64, label }: { value: number; size?: number; label: string }) {
   const clamped = Math.min(100, Math.max(0, Math.round(value)));
-  const stroke = 6;
-  const radius = (size - stroke) / 2;
+  // Traço fino e anel um pouco mais afastado da borda = folga clara até o percentual
+  const stroke = Math.max(3, Math.round(size * 0.075));
+  const gap = Math.max(3.5, size * 0.09);
+  const radius = size / 2 - stroke / 2 - gap;
   const circumference = 2 * Math.PI * radius;
+  const fontSize = Math.max(9, Math.round(size * 0.2));
   return (
     <div className="relative inline-grid place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${label}: ${clamped}%`}>
@@ -57,7 +60,12 @@ export function ProgressRing({ value, size = 64, label }: { value: number; size?
           className="transition-[stroke-dashoffset] duration-700"
         />
       </svg>
-      <span className="absolute text-sm font-semibold text-mist-50">{clamped}%</span>
+      <span
+        className="absolute leading-none font-semibold tracking-tight text-mist-50 tabular-nums"
+        style={{ fontSize }}
+      >
+        {clamped}%
+      </span>
     </div>
   );
 }

@@ -14,6 +14,7 @@
     "db:types": "supabase gen types typescript --local --schema public > src/lib/supabase/database.types.ts",
     "seed:videos": "tsx scripts/seed-videos.ts",
     "seed:module01": "tsx scripts/upload-module-01-videos.ts",
+    "seed:quiz": "tsx scripts/seed-quiz.ts",
     "broker:event": "tsx scripts/send-broker-event.ts"
   },
   "dependencies": {

@@ -1,6 +1,8 @@
 import { BookOpen, FileText, Target } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ComingSoonModules } from "@/components/platform/coming-soon-modules";
 import { LockedModulePanel } from "@/components/platform/module-blocks";
 import { LessonStage } from "@/components/player/lesson-stage";
 import { PlaylistLessons, playlistMeta } from "@/components/player/playlist";
@@ -8,6 +10,7 @@ import { Breadcrumbs, EmptyState } from "@/components/ui/misc";
 import { requiredWatchSeconds } from "@/lib/access/lesson-guard";
 import { findLesson } from "@/lib/access/snapshot";
 import { getStudentContext } from "@/lib/access/student";
+import { isLaunchVisibleModule } from "@/lib/catalog/launch";
 import { formatDuration, moduleNumber } from "@/lib/format";
 import { resolvePlayback } from "@/lib/video/playback";
 
@@ -27,6 +30,18 @@ export default async function LessonPage({ params }: PageProps<"/plataforma/aula
   const entry = findLesson(snapshot, id);
   if (!entry) notFound();
   const { module, lesson, previous } = entry;
+
+  if (!isLaunchVisibleModule(module.position)) {
+    return (
+      <div className="flex flex-col gap-8">
+        <Breadcrumbs items={[{ label: "Minha formação", href: "/plataforma" }, { label: "Em breve" }]} />
+        <ComingSoonModules />
+        <Link href="/plataforma" className="text-sm font-medium text-brand-400 hover:text-brand-300">
+          ← Voltar para a formação
+        </Link>
+      </div>
+    );
+  }
 
   const breadcrumbs = (
     <Breadcrumbs
@@ -51,7 +66,13 @@ export default async function LessonPage({ params }: PageProps<"/plataforma/aula
 
   let next = entry.next ? { href: `/plataforma/aula/${entry.next.id}`, title: entry.next.title } : null;
   if (!next) {
-    const nextModule = snapshot.modules.find((m) => m.position > module.position && m.access.unlocked && m.lessons.length > 0);
+    const nextModule = snapshot.modules.find(
+      (m) =>
+        isLaunchVisibleModule(m.position) &&
+        m.position > module.position &&
+        m.access.unlocked &&
+        m.lessons.length > 0,
+    );
     if (nextModule) next = { href: `/plataforma/aula/${nextModule.lessons[0]!.id}`, title: nextModule.lessons[0]!.title };
   }
 

@@ -24,6 +24,17 @@ export function formatDate(value: string | Date | null | undefined): string {
   );
 }
 
+/** Data por extenso no estilo do certificado: "14 de outubro de 2026". */
+export function formatDateLong(value: string | Date | null | undefined): string {
+  if (!value) return "—";
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "America/Sao_Paulo",
+  }).format(new Date(value));
+}
+
 export function formatDateTime(value: string | Date | null | undefined): string {
   if (!value) return "—";
   return new Intl.DateTimeFormat("pt-BR", {

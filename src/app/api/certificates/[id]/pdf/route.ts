@@ -1,6 +1,5 @@
 import { getSessionUser } from "@/lib/auth/session";
 import { renderCertificatePdf } from "@/lib/certificates/pdf";
-import { verificationUrl } from "@/lib/certificates/service";
 import { consumeRateLimit, jsonError } from "@/lib/http/security";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -33,8 +32,6 @@ export async function GET(_request: Request, ctx: RouteContext<"/api/certificate
     programName: course?.title ?? "Formação Trader Bullex",
     completedAt: new Date(certificate.completed_at),
     workloadHours: certificate.workload_hours,
-    verificationCode: certificate.verification_code,
-    verificationUrl: verificationUrl(certificate.verification_code),
   });
 
   return new Response(Buffer.from(pdf), {

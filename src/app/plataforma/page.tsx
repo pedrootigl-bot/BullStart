@@ -1,19 +1,24 @@
 import { BookOpen, CheckCircle2, Layers, Play, TrendingUp } from "lucide-react";
 import type { Metadata } from "next";
+import { ComingSoonModules } from "@/components/platform/coming-soon-modules";
 import { ModuleSection } from "@/components/platform/module-blocks";
 import { FlashToast } from "@/components/platform/flash-toast";
+import { QuizzesSummary } from "@/components/platform/quiz-card";
+import { WelcomeModal } from "@/components/platform/welcome-modal";
 import { ButtonLink } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
 import { ProgressRing } from "@/components/ui/progress";
 import { getStudentContext } from "@/lib/access/student";
 import { firstName } from "@/lib/auth/session";
+import { filterLaunchModules } from "@/lib/catalog/launch";
 import { cn } from "@/lib/cn";
+import { loadModuleQuizzes } from "@/lib/quiz/service";
 
 export const metadata: Metadata = { title: "Minha formação" };
 
 const STAT_CARD = "surface flex flex-col items-center gap-1.5 px-2 py-3 text-center sm:p-4";
 const STAT_LABEL = "text-[11px] tracking-wide text-mist-400 uppercase";
-const STAT_VALUE = "flex h-11 items-center justify-center";
+const STAT_VALUE = "flex h-14 items-center justify-center";
 
 const FLASH: Record<string, { tone: "success" | "error" | "info"; message: string }> = {
   "acesso-restrito": { tone: "error", message: "Você não tem permissão para acessar a área administrativa." },
@@ -23,30 +28,67 @@ const FLASH: Record<string, { tone: "success" | "error" | "info"; message: strin
 export default async function DashboardPage({ searchParams }: PageProps<"/plataforma">) {
   const params = await searchParams;
   const { session, snapshot, depositConfigured } = await getStudentContext();
+  // Aceita ?boas-vindas=1 e também ?boas-vindas= (string vazia ainda conta como presente).
+  const welcomeParam = params["boas-vindas"];
+  const showWelcome =
+    typeof welcomeParam === "string"
+      ? welcomeParam !== "0" && welcomeParam !== "false"
+      : Array.isArray(welcomeParam);
   const flash =
     typeof params.erro === "string"
       ? FLASH[params.erro]
       : params.senha === "atualizada"
         ? { tone: "success" as const, message: "Senha atualizada com sucesso." }
-        : params["boas-vindas"]
-          ? { tone: "success" as const, message: "Conta criada! Sua jornada começa agora." }
-          : undefined;
+        : undefined;
 
   if (!snapshot) {
     return (
-      <EmptyState
-        icon={<BookOpen className="size-6" />}
-        title="A formação está sendo preparada"
-        description="Os módulos ainda não foram publicados. Volte em breve para começar sua jornada."
-      />
+      <>
+        {showWelcome ? <WelcomeModal startHref="/plataforma" /> : null}
+        <EmptyState
+          icon={<BookOpen className="size-6" />}
+          title="A formação está sendo preparada"
+          description="Os módulos ainda não foram publicados. Volte em breve para começar sua jornada."
+        />
+      </>
     );
   }
 
-  const { overall, resume } = snapshot;
+  const visibleModules = filterLaunchModules(snapshot.modules);
+  const visibleIds = new Set(visibleModules.map((m) => m.id));
+  const completedLessons = visibleModules.reduce(
+    (acc, m) => acc + m.lessons.filter((l) => snapshot.progressByLesson.get(l.id)?.status === "completed").length,
+    0,
+  );
+  const totalLessons = visibleModules.reduce((acc, m) => acc + m.lessons.length, 0);
+  const completedRequired = visibleModules.reduce((acc, m) => acc + m.progress.completedRequired, 0);
+  const totalRequired = visibleModules.reduce((acc, m) => acc + m.progress.totalRequired, 0);
+  const percent = totalRequired === 0 ? 0 : Math.floor((completedRequired / totalRequired) * 100);
+  const unlockedModules = visibleModules.filter((m) => m.access.unlocked).length;
+
+  const quizzes = (await loadModuleQuizzes(snapshot, session.profile.id)).filter((q) => visibleIds.has(q.moduleId));
+  const resumeInLaunch =
+    snapshot.resume && visibleModules.some((m) => m.lessons.some((l) => l.id === snapshot.resume?.lessonId))
+      ? snapshot.resume
+      : null;
+  const resumeFallback = (() => {
+    for (const courseModule of visibleModules) {
+      for (const lesson of courseModule.lessons) {
+        if (snapshot.progressByLesson.get(lesson.id)?.status !== "completed") {
+          return { lessonId: lesson.id, title: lesson.title, moduleTitle: courseModule.title };
+        }
+      }
+    }
+    return null;
+  })();
+  const resume = resumeInLaunch ?? resumeFallback;
 
   return (
     <div className="flex flex-col gap-12">
       {flash && <FlashToast tone={flash.tone} message={flash.message} />}
+      {showWelcome ? (
+        <WelcomeModal startHref={resume ? `/plataforma/aula/${resume.lessonId}` : "/plataforma"} />
+      ) : null}
 
       <section
         aria-labelledby="boas-vindas"
@@ -89,8 +131,8 @@ export default async function DashboardPage({ searchParams }: PageProps<"/plataf
                 Módulos<span className="hidden sm:inline"> disponíveis</span>
               </dt>
               <dd className={cn(STAT_VALUE, "text-xl font-semibold text-mist-50")}>
-                {overall.unlockedModules}
-                <span className="text-sm text-mist-500">/{snapshot.modules.length}</span>
+                {unlockedModules}
+                <span className="text-sm text-mist-500">/{visibleModules.length}</span>
               </dd>
             </div>
             <div className={STAT_CARD}>
@@ -99,8 +141,8 @@ export default async function DashboardPage({ searchParams }: PageProps<"/plataf
                 Aulas<span className="hidden sm:inline"> concluídas</span>
               </dt>
               <dd className={cn(STAT_VALUE, "text-xl font-semibold text-mist-50")}>
-                {overall.completedLessons}
-                <span className="text-sm text-mist-500">/{overall.totalLessons}</span>
+                {completedLessons}
+                <span className="text-sm text-mist-500">/{totalLessons}</span>
               </dd>
             </div>
             <div className={STAT_CARD}>
@@ -109,16 +151,26 @@ export default async function DashboardPage({ searchParams }: PageProps<"/plataf
                 Progresso<span className="hidden sm:inline"> geral</span>
               </dt>
               <dd className={STAT_VALUE}>
-                <ProgressRing value={overall.percent} size={44} label="Progresso geral" />
+                <ProgressRing value={percent} size={52} label="Progresso geral" />
               </dd>
             </div>
           </dl>
         </div>
       </section>
 
-      {snapshot.modules.map((module) => (
-        <ModuleSection key={module.id} snapshot={snapshot} module={module} depositConfigured={depositConfigured} />
+      {visibleModules.map((module) => (
+        <ModuleSection
+          key={module.id}
+          snapshot={snapshot}
+          module={module}
+          depositConfigured={depositConfigured}
+          quiz={quizzes.find((q) => q.moduleId === module.id) ?? null}
+        />
       ))}
+
+      <ComingSoonModules />
+
+      <QuizzesSummary quizzes={quizzes} />
     </div>
   );
 }

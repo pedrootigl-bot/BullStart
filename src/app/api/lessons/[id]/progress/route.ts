@@ -43,6 +43,7 @@ export async function POST(request: Request, ctx: RouteContext<"/api/lessons/[id
     lastPositionSeconds: data.last_position_seconds,
     watchedSeconds: data.watched_seconds,
     requiredSeconds: required,
-    canComplete: data.status === "completed" || data.watched_seconds >= required,
+    canComplete:
+      data.status === "completed" || data.watched_seconds >= required || data.last_position_seconds >= required,
   });
 }

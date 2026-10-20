@@ -1,6 +1,7 @@
 import { ArrowRight, Clock, ExternalLink, Lock, PlayCircle } from "lucide-react";
 import Link from "next/link";
 import { LessonThumb } from "@/components/platform/lesson-thumb";
+import { ModuleQuizSection } from "@/components/platform/module-quiz-section";
 import { RequirementList } from "@/components/platform/requirement-list";
 import { LessonStatusBadge } from "@/components/platform/status";
 import { VerifyRequirementsButton } from "@/components/platform/verify-requirements-button";
@@ -12,6 +13,7 @@ import { SnapCarousel } from "@/components/ui/snap-carousel";
 import { lessonStatus, type CourseSnapshot, type LessonView, type ModuleView } from "@/lib/access/snapshot";
 import { cn } from "@/lib/cn";
 import { formatDuration, moduleNumber } from "@/lib/format";
+import type { ModuleQuizView } from "@/lib/quiz/service";
 
 export function LessonCard({
   snapshot,
@@ -170,10 +172,12 @@ export function ModuleSection({
   snapshot,
   module,
   depositConfigured,
+  quiz = null,
 }: {
   snapshot: CourseSnapshot;
   module: ModuleView;
   depositConfigured: boolean;
+  quiz?: ModuleQuizView | null;
 }) {
   return (
     <section aria-labelledby={`modulo-${module.id}`} className="flex flex-col gap-5">
@@ -187,19 +191,22 @@ export function ModuleSection({
         </Link>
       </div>
       {module.access.unlocked ? (
-        module.lessons.length > 0 ? (
-          <SnapCarousel itemLabel="a aula" gutter="platform" gridClassName="sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-            {module.lessons.map((lesson) => (
-              <li key={lesson.id}>
-                <LessonCard snapshot={snapshot} module={module} lesson={lesson} />
-              </li>
-            ))}
-          </SnapCarousel>
-        ) : (
-          <p className="surface flex items-center gap-2 p-5 text-sm text-mist-400">
-            <PlayCircle className="size-4" aria-hidden="true" /> As aulas deste módulo serão publicadas em breve.
-          </p>
-        )
+        <>
+          {module.lessons.length > 0 ? (
+            <SnapCarousel itemLabel="a aula" gutter="platform" gridClassName="sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+              {module.lessons.map((lesson) => (
+                <li key={lesson.id}>
+                  <LessonCard snapshot={snapshot} module={module} lesson={lesson} />
+                </li>
+              ))}
+            </SnapCarousel>
+          ) : (
+            <p className="surface flex items-center gap-2 p-5 text-sm text-mist-400">
+              <PlayCircle className="size-4" aria-hidden="true" /> As aulas deste módulo serão publicadas em breve.
+            </p>
+          )}
+          <ModuleQuizSection quiz={quiz} />
+        </>
       ) : (
         <>
           {module.lessons.length > 0 && (

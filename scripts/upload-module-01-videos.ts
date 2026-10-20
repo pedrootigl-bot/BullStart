@@ -27,6 +27,7 @@ const LESSONS = [
     objectives: ["Compreender o funcionamento das opções binárias", "Identificar os elementos de uma operação"],
     topics: ["Opções binárias", "Funcionamento", "Conceitos-chave"],
     path: "module-01/aula-01.mp4",
+    thumbnail: "/thumbs/module-01/aula-01.png",
   },
   {
     position: 2,
@@ -36,6 +37,7 @@ const LESSONS = [
     objectives: ["Ler o gráfico com segurança", "Reconhecer velas e a interface da plataforma"],
     topics: ["Gráfico", "Candlesticks", "Plataforma"],
     path: "module-01/aula-02.mp4",
+    thumbnail: "/thumbs/module-01/aula-02.png",
   },
   {
     position: 3,
@@ -45,6 +47,7 @@ const LESSONS = [
     objectives: ["Identificar indicadores relevantes", "Entender o papel de cada indicador"],
     topics: ["Indicadores", "Análise técnica"],
     path: "module-01/aula-03.mp4",
+    thumbnail: "/thumbs/module-01/aula-03.png",
   },
   {
     position: 4,
@@ -54,6 +57,7 @@ const LESSONS = [
     objectives: ["Aplicar indicadores no gráfico", "Interpretar sinais com disciplina"],
     topics: ["Indicadores", "Prática", "Sinais"],
     path: "module-01/aula-04.mp4",
+    thumbnail: "/thumbs/module-01/aula-04.png",
   },
   {
     position: 5,
@@ -63,6 +67,7 @@ const LESSONS = [
     objectives: ["Compreender o risk free", "Relacionar risco e proteção do capital"],
     topics: ["Risk free", "Gestão de risco"],
     path: "module-01/aula-05.mp4",
+    thumbnail: "/thumbs/module-01/aula-05.png",
   },
 ] as const;
 
@@ -130,6 +135,7 @@ async function main() {
       duration_seconds: duration,
       position: lesson.position,
       is_published: true,
+      thumbnail_url: lesson.thumbnail,
     };
 
     if (existing?.id) {

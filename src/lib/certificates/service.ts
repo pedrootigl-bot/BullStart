@@ -1,8 +1,10 @@
 import "server-only";
-import { isCourseComplete, type CourseSnapshot } from "@/lib/access/snapshot";
+import type { CourseSnapshot } from "@/lib/access/snapshot";
 import { recordAudit } from "@/lib/audit";
 import { generateVerificationCode } from "@/lib/certificates/code";
+import { isLaunchCourseComplete, launchModuleIds } from "@/lib/catalog/launch";
 import { getEnv } from "@/lib/env";
+import { hasPassedAllQuizzes } from "@/lib/quiz/service";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import type { Tables } from "@/lib/supabase/database.types";
 
@@ -10,7 +12,7 @@ export type CertificateRow = Tables<"certificates">;
 
 export type IssueResult =
   | { ok: true; certificate: CertificateRow; alreadyIssued: boolean }
-  | { ok: false; reason: "incomplete" | "missing_name" | "error" };
+  | { ok: false; reason: "incomplete" | "quiz_required" | "missing_name" | "error" };
 
 export function verificationUrl(code: string): string {
   return new URL(`/certificado/verificar/${encodeURIComponent(code)}`, getEnv().APP_URL).toString();
@@ -29,7 +31,9 @@ export async function getActiveCertificate(userId: string, courseId: string): Pr
 
 function completionDate(snapshot: CourseSnapshot): string {
   let latest = 0;
+  const visibleIds = new Set(launchModuleIds(snapshot));
   for (const courseModule of snapshot.modules) {
+    if (!visibleIds.has(courseModule.id)) continue;
     for (const lesson of courseModule.lessons) {
       if (!lesson.is_required) continue;
       const completedAt = snapshot.progressByLesson.get(lesson.id)?.completed_at;
@@ -47,7 +51,10 @@ export async function issueCertificate(
   profile: { id: string; full_name: string },
   snapshot: CourseSnapshot,
 ): Promise<IssueResult> {
-  if (!isCourseComplete(snapshot)) return { ok: false, reason: "incomplete" };
+  if (!isLaunchCourseComplete(snapshot)) return { ok: false, reason: "incomplete" };
+  if (!(await hasPassedAllQuizzes(profile.id, snapshot.course.id, launchModuleIds(snapshot)))) {
+    return { ok: false, reason: "quiz_required" };
+  }
   const holderName = profile.full_name.trim();
   if (holderName.length < 3) return { ok: false, reason: "missing_name" };
 
