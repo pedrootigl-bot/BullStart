@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Server Actions recebem senhas (login, cadastro, troca de senha): não registrar argumentos no log.
   logging: { serverFunctions: false },
+  experimental: {
+    agentUpgrade: "security",
+  },
   turbopack: {
     rules: {
       "*.css": {
