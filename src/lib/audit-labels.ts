@@ -14,6 +14,7 @@ const AUDIT_LABELS: Record<string, string> = {
   "lesson.unpublished": "Aula despublicada",
   "lesson.deleted": "Aula excluída",
   "lesson.video_uploaded": "Vídeo da aula enviado",
+  "lesson.thumbnail_uploaded": "Miniatura da aula enviada",
   "module_access.granted": "Acesso manual liberado",
   "module_access.revoked": "Acesso manual revogado",
   "certificate.issued": "Certificado emitido",

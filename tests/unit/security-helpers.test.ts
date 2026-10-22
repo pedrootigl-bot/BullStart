@@ -72,9 +72,12 @@ describe("validadores de mídia", () => {
     expect(isSafeStoragePath("/abs/path.mp4")).toBe(false);
   });
 
-  it("miniaturas aceitam https ou caminho local", () => {
+  it("miniaturas aceitam https, localhost ou caminho local", () => {
     expect(isSafeImageUrl("https://img.example.com/a.jpg")).toBe(true);
     expect(isSafeImageUrl("/images/a.jpg")).toBe(true);
+    expect(isSafeImageUrl("http://127.0.0.1:54321/storage/v1/object/public/lesson-thumbnails/a.jpg")).toBe(true);
+    expect(isSafeImageUrl("http://localhost:54321/storage/v1/object/public/lesson-thumbnails/a.jpg")).toBe(true);
+    expect(isSafeImageUrl("http://evil.com/a.jpg")).toBe(false);
     expect(isSafeImageUrl("//evil.com/a.jpg")).toBe(false);
     expect(isSafeImageUrl("javascript:alert(1)")).toBe(false);
   });

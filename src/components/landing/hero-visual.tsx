@@ -34,8 +34,8 @@ export function HeroVisual({ moduleCount }: { moduleCount: number }) {
         <svg viewBox="0 0 430 270" className="h-auto w-full">
           <defs>
             <linearGradient id="hero-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#1fd877" stopOpacity="0.28" />
-              <stop offset="100%" stopColor="#1fd877" stopOpacity="0" />
+              <stop offset="0%" stopColor="#0abf04" stopOpacity="0.28" />
+              <stop offset="100%" stopColor="#0abf04" stopOpacity="0" />
             </linearGradient>
           </defs>
           {[60, 110, 160, 210].map((y) => (
@@ -56,7 +56,7 @@ export function HeroVisual({ moduleCount }: { moduleCount: number }) {
           />
           {CANDLES.map((c) => {
             const up = c.close < c.open;
-            const color = up ? "#1fd877" : "#ff7a7a";
+            const color = up ? "#0abf04" : "#ff7a7a";
             const top = Math.min(c.open, c.close);
             return (
               <g key={c.x}>

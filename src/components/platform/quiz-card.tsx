@@ -31,7 +31,7 @@ export function QuizCard({
     return (
       <section
         aria-labelledby={titleId}
-        className="surface relative overflow-hidden border-brand-500/30 p-5 shadow-[0_0_40px_-18px_rgb(31_216_119/0.45)] sm:p-6"
+        className="surface relative overflow-hidden border-brand-500/30 p-5 shadow-[0_0_40px_-18px_rgb(10_191_4/0.45)] sm:p-6"
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -117,7 +117,7 @@ export function QuizCard({
       aria-labelledby={titleId}
       className={cn(
         "surface relative overflow-hidden border-brand-500/25 p-5 sm:p-6",
-        "shadow-[0_0_40px_-18px_rgb(31_216_119/0.45)]",
+        "shadow-[0_0_40px_-18px_rgb(10_191_4/0.45)]",
       )}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -193,7 +193,7 @@ export function QuizzesSummary({ quizzes }: { quizzes: ModuleQuizView[] }) {
       aria-labelledby="provas-resumo-title"
       className={cn(
         "surface relative overflow-hidden p-5 sm:p-6",
-        allPassed ? "border-brand-500/30 shadow-[0_0_40px_-18px_rgb(31_216_119/0.45)]" : "border-brand-500/20",
+        allPassed ? "border-brand-500/30 shadow-[0_0_40px_-18px_rgb(10_191_4/0.45)]" : "border-brand-500/20",
       )}
     >
       <div className="flex flex-wrap items-start justify-between gap-4">

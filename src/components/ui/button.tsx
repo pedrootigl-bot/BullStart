@@ -7,10 +7,11 @@ type Size = "sm" | "md" | "lg";
 
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "bg-brand-500 text-ink-950 hover:bg-brand-400 shadow-[0_10px_30px_-12px_rgb(31_216_119/0.7)] hover:shadow-[0_14px_36px_-12px_rgb(31_216_119/0.85)]",
-  secondary: "bg-ink-700 text-mist-50 hover:bg-ink-600 border border-white/10",
-  ghost: "text-mist-100 hover:bg-white/5",
-  outline: "border border-white/15 text-mist-50 hover:border-brand-400/60 hover:text-brand-300 bg-transparent",
+    "bg-brand-500 text-ink-950 hover:bg-brand-400 shadow-[0_10px_30px_-12px_rgb(10_191_4/0.7)] hover:shadow-[0_14px_36px_-12px_rgb(10_191_4/0.85)]",
+  secondary: "bg-ink-700 text-mist-50 hover:bg-ink-600 border border-white/10 hover:border-brand-500/25",
+  ghost: "text-mist-100 hover:bg-brand-500/10 hover:text-brand-300",
+  outline:
+    "border border-white/18 text-mist-50 bg-white/[0.02] hover:border-brand-500/60 hover:bg-brand-500/10 hover:text-brand-500",
   danger: "bg-danger-400/10 text-danger-400 border border-danger-400/30 hover:bg-danger-400/20",
   gold: "bg-linear-to-r from-gold-300 to-gold-500 text-ink-950 hover:brightness-110",
 };

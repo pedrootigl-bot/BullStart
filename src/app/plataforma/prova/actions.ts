@@ -21,6 +21,8 @@ export type SubmitQuizActionResult =
       correctCount: number;
       total: number;
       attemptsRemaining: number;
+      moduleId: string;
+      moduleTitle: string;
     }
   | { ok: false; error: string };
 
@@ -52,5 +54,7 @@ export async function submitQuizAction(raw: unknown): Promise<SubmitQuizActionRe
     correctCount: result.correctCount,
     total: result.total,
     attemptsRemaining: result.attemptsRemaining,
+    moduleId: result.moduleId,
+    moduleTitle: result.moduleTitle,
   };
 }

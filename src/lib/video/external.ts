@@ -20,7 +20,10 @@ export function isSafeImageUrl(candidate: string): boolean {
   if (candidate.startsWith("/") && !candidate.startsWith("//")) return /^\/[a-zA-Z0-9/._-]+$/.test(candidate);
   try {
     const url = new URL(candidate);
-    return url.protocol === "https:" && !url.username && !url.password;
+    if (url.username || url.password) return false;
+    if (url.protocol === "https:") return true;
+    // Supabase local (e similares) serve o bucket público em http://127.0.0.1
+    return url.protocol === "http:" && (url.hostname === "127.0.0.1" || url.hostname === "localhost");
   } catch {
     return false;
   }

@@ -270,6 +270,8 @@ export type SubmitQuizResult =
       correctCount: number;
       total: number;
       attemptsRemaining: number;
+      moduleId: string;
+      moduleTitle: string;
     }
   | {
       ok: false;
@@ -390,6 +392,8 @@ export async function submitQuizAttempt(
     },
   });
 
+  const courseModule = snapshot.modules.find((module) => module.id === quiz.module_id);
+
   return {
     ok: true,
     scorePercent,
@@ -397,5 +401,7 @@ export async function submitQuizAttempt(
     correctCount,
     total,
     attemptsRemaining: Math.max(0, quiz.max_attempts - (priorRows.length + 1)),
+    moduleId: quiz.module_id,
+    moduleTitle: courseModule?.title ?? "Módulo",
   };
 }

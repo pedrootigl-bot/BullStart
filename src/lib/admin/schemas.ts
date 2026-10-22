@@ -77,6 +77,17 @@ export const attachVideoSchema = z.object({
   durationSeconds: z.coerce.number().int().min(0).max(86400),
 });
 
+export const thumbnailUploadSchema = z.object({
+  lessonId: uuidSchema,
+  fileName: z.string().trim().min(1).max(200),
+  contentType: z.enum(["image/jpeg", "image/png", "image/webp", "image/gif"], "Envie JPEG, PNG, WebP ou GIF."),
+});
+
+export const attachThumbnailSchema = z.object({
+  lessonId: uuidSchema,
+  path: z.string().max(512),
+});
+
 export const grantAccessSchema = z.object({
   userId: uuidSchema,
   moduleId: uuidSchema,

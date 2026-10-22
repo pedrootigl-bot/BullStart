@@ -82,7 +82,7 @@ export function WelcomeModal({ startHref }: WelcomeModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.85 }}
-            className="relative z-10 w-full max-w-[980px] overflow-hidden rounded-[28px] border border-brand-400/35 bg-ink-900 shadow-[0_40px_120px_-24px_rgba(0,0,0,0.9),0_0_80px_-20px_rgb(31_216_119/0.35)]"
+            className="relative z-10 w-full max-w-[980px] overflow-hidden rounded-[28px] border border-brand-400/35 bg-ink-900 shadow-[0_40px_120px_-24px_rgba(0,0,0,0.9),0_0_80px_-20px_rgb(10_191_4/0.35)]"
           >
             <div className="grid md:grid-cols-[1.12fr_0.88fr]">
               <div className="relative min-h-[220px] overflow-hidden md:min-h-[520px]">

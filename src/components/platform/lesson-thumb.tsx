@@ -38,7 +38,7 @@ export function LessonThumb({
             <polyline
               points={`0,${70 - lessonPosition * 3} 30,${60 - lessonPosition * 2} 55,64 85,${44 - lessonPosition} 115,48 160,${26 - lessonPosition}`}
               fill="none"
-              stroke="#46eb93"
+              stroke="#2fd429"
               strokeWidth="1.2"
             />
           </svg>

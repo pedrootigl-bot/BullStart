@@ -1,6 +1,6 @@
 "use client";
 
-import { Award, Home, LogOut, Shield, User } from "lucide-react";
+import { Award, GraduationCap, Home, LogOut, Shield, User } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -43,15 +43,24 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
 
   const items: NavItem[] = [
     { href: "/plataforma", label: "Início", icon: Home, exact: true },
+    { href: "/plataforma/cursos", label: "Cursos", icon: GraduationCap },
     { href: "/plataforma/certificado", label: "Certificado", icon: Award },
     { href: "/plataforma/perfil", label: "Perfil", icon: User },
     ...(isAdmin ? [{ href: "/admin", label: "Administração", icon: Shield }] : []),
   ];
 
-  const isActive = (item: NavItem) =>
-    item.exact
-      ? pathname === item.href || pathname.startsWith("/plataforma/modulo") || pathname.startsWith("/plataforma/aula")
-      : pathname.startsWith(item.href);
+  const isActive = (item: NavItem) => {
+    if (item.href === "/plataforma/cursos") return pathname.startsWith("/plataforma/cursos");
+    if (item.exact) {
+      return (
+        pathname === item.href ||
+        pathname.startsWith("/plataforma/modulo") ||
+        pathname.startsWith("/plataforma/aula") ||
+        pathname.startsWith("/plataforma/prova")
+      );
+    }
+    return pathname.startsWith(item.href);
+  };
 
   const initials = name
     .split(/\s+/)
@@ -68,7 +77,7 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
         <nav aria-label="Plataforma" className="hidden lg:block">
           <ul className="flex items-center gap-1">
             {items.map((item) => (
-              <li key={item.href}>
+              <li key={`${item.label}-${item.href}`}>
                 <Link
                   href={item.href}
                   aria-current={isActive(item) ? "page" : undefined}
@@ -153,7 +162,7 @@ export function PlatformHeader({ name, email, isAdmin }: { name: string; email: 
                   </span>
                 </motion.li>
                 {items.map((item) => (
-                  <motion.li key={item.href} variants={variants.item}>
+                  <motion.li key={`${item.label}-${item.href}`} variants={variants.item}>
                     <Link
                       href={item.href}
                       aria-current={isActive(item) ? "page" : undefined}

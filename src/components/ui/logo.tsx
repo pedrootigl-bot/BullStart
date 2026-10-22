@@ -6,8 +6,8 @@ export function LogoMark({ className }: { className?: string }) {
     <svg viewBox="0 0 40 40" aria-hidden="true" className={cn("size-9", className)}>
       <defs>
         <linearGradient id="bxs-mark" x1="0" y1="40" x2="40" y2="0" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#12b562" />
-          <stop offset="1" stopColor="#7df5b4" />
+          <stop stopColor="#089803" />
+          <stop offset="1" stopColor="#5fe85a" />
         </linearGradient>
       </defs>
       <rect width="40" height="40" rx="11" fill="#0f1312" />
@@ -27,6 +27,22 @@ export function Logo({ href = "/", className }: { href?: string; className?: str
           BULLEX <span className="text-brand-400">START</span>
         </span>
         <span className="mt-1 text-[10px] font-medium tracking-[0.18em] text-mist-500 uppercase">Formação Trader</span>
+      </span>
+    </Link>
+  );
+}
+
+/** Compacto para topbar da plataforma (padrão shell BullVerse). */
+export function LogoCompact({ href = "/plataforma", className }: { href?: string; className?: string }) {
+  return (
+    <Link
+      href={href}
+      className={cn("inline-flex items-center gap-[0.55rem] text-inherit no-underline", className)}
+      aria-label="Bullex Start — início"
+    >
+      <LogoMark className="size-8" />
+      <span className="text-[1.2rem] font-extrabold tracking-[-0.03em] text-mist-50 italic">
+        Bullex <span className="not-italic text-brand-500">Start</span>
       </span>
     </Link>
   );

@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { isSafeStoragePath, validateExternalVideoUrl } from "@/lib/video/external";
 
 export const VIDEO_BUCKET = "lesson-videos";
+export const THUMBNAIL_BUCKET = "lesson-thumbnails";
 
 export type Playback =
   | { ok: true; url: string; expiresAt: string | null }

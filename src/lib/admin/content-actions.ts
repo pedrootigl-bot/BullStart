@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { validateRequirementInput } from "@/lib/access/requirements";
 import { isUniqueViolation, runAdmin, type AdminResult } from "@/lib/admin/guard";
 import {
+  attachThumbnailSchema,
   attachVideoSchema,
   courseSettingsSchema,
   idSchema,
@@ -12,6 +13,7 @@ import {
   moduleRequirementsSchema,
   moveSchema,
   publishSchema,
+  thumbnailUploadSchema,
   videoUploadSchema,
 } from "@/lib/admin/schemas";
 import { recordAudit } from "@/lib/audit";
@@ -20,7 +22,7 @@ import { slugify } from "@/lib/format";
 import type { Json } from "@/lib/supabase/database.types";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { isSafeImageUrl, isSafeStoragePath, validateExternalVideoUrl } from "@/lib/video/external";
-import { toPublicSupabaseUrl, VIDEO_BUCKET } from "@/lib/video/playback";
+import { THUMBNAIL_BUCKET, toPublicSupabaseUrl, VIDEO_BUCKET } from "@/lib/video/playback";
 
 function revalidateContent() {
   revalidatePath("/admin", "layout");
@@ -188,7 +190,9 @@ export async function saveLessonAction(input: unknown): Promise<AdminResult<{ id
   return runAdmin(lessonInputSchema, input, async (data, admin) => {
     const env = getEnv();
     const thumbnail = data.thumbnailUrl || null;
-    if (thumbnail && !isSafeImageUrl(thumbnail)) return { ok: false, error: "Miniatura deve ser uma URL https ou um caminho local." };
+    if (thumbnail && !isSafeImageUrl(thumbnail)) {
+      return { ok: false, error: "Miniatura deve ser uma URL https, localhost ou um caminho local." };
+    }
 
     let videoAssetId: string | null = data.videoAssetId || null;
     if (videoAssetId) {
@@ -349,5 +353,56 @@ export async function attachUploadedVideoAction(input: unknown): Promise<AdminRe
     await recordAudit({ actorId: admin.profile.id, action: "lesson.video_uploaded", entityType: "lesson", entityId: data.lessonId, metadata: fields });
     revalidateContent();
     return { ok: true, message: "Vídeo enviado e associado à aula." };
+  });
+}
+
+const THUMBNAIL_EXTENSION: Record<"image/jpeg" | "image/png" | "image/webp" | "image/gif", string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+};
+
+/** Gera uma URL de upload assinada e de uso único para o bucket público de miniaturas. */
+export async function createThumbnailUploadAction(input: unknown): Promise<AdminResult<{ uploadUrl: string; path: string }>> {
+  return runAdmin(thumbnailUploadSchema, input, async (data) => {
+    const env = getEnv();
+    const extension = THUMBNAIL_EXTENSION[data.contentType];
+    const base = slugify(data.fileName.replace(/\.[^.]+$/, "")).slice(0, 60) || "thumb";
+    const path = `lessons/${data.lessonId}/${Date.now()}-${base}.${extension}`;
+    const { data: signed, error } = await getSupabaseAdmin().storage.from(THUMBNAIL_BUCKET).createSignedUploadUrl(path);
+    if (error || !signed) return { ok: false, error: "Não foi possível preparar o upload da miniatura." };
+    return {
+      ok: true,
+      data: { uploadUrl: toPublicSupabaseUrl(signed.signedUrl, env.SUPABASE_URL, env.SUPABASE_PUBLIC_URL), path },
+    };
+  });
+}
+
+export async function attachUploadedThumbnailAction(input: unknown): Promise<AdminResult<{ url: string }>> {
+  return runAdmin(attachThumbnailSchema, input, async (data, admin) => {
+    if (!isSafeStoragePath(data.path) || !data.path.startsWith(`lessons/${data.lessonId}/`)) {
+      return { ok: false, error: "Caminho de upload inválido." };
+    }
+    const env = getEnv();
+    const db = getSupabaseAdmin();
+    const { error: existsError } = await db.storage.from(THUMBNAIL_BUCKET).createSignedUrl(data.path, 30);
+    if (existsError) return { ok: false, error: "A imagem não foi encontrada no armazenamento. Refaça o upload." };
+
+    const { data: publicObject } = db.storage.from(THUMBNAIL_BUCKET).getPublicUrl(data.path);
+    const url = toPublicSupabaseUrl(publicObject.publicUrl, env.SUPABASE_URL, env.SUPABASE_PUBLIC_URL);
+    if (!isSafeImageUrl(url)) return { ok: false, error: "URL pública da miniatura inválida." };
+
+    const { error } = await db.from("lessons").update({ thumbnail_url: url }).eq("id", data.lessonId);
+    if (error) return { ok: false, error: "Não foi possível associar a miniatura à aula." };
+    await recordAudit({
+      actorId: admin.profile.id,
+      action: "lesson.thumbnail_uploaded",
+      entityType: "lesson",
+      entityId: data.lessonId,
+      metadata: { path: data.path, thumbnail_url: url },
+    });
+    revalidateContent();
+    return { ok: true, message: "Miniatura enviada e associada à aula.", data: { url } };
   });
 }

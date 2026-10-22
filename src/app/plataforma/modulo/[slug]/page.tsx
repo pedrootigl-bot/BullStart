@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ComingSoonModules } from "@/components/platform/coming-soon-modules";
+import { ModuleCelebrationHost } from "@/components/platform/module-celebration-host";
 import { LessonCard, LockedModulePanel, ModuleHeader } from "@/components/platform/module-blocks";
 import { ModuleQuizSection } from "@/components/platform/module-quiz-section";
 import { RequirementList } from "@/components/platform/requirement-list";
@@ -43,8 +44,12 @@ export default async function ModulePage({ params }: PageProps<"/plataforma/modu
   const quiz = await loadModuleQuiz(snapshot, session.profile.id, slug);
   const firstPending = current.lessons.find((l) => snapshot.progressByLesson.get(l.id)?.status !== "completed") ?? current.lessons[0];
 
+  const celebrateModules =
+    quiz?.passed && current.progress.percent === 100 ? [{ id: current.id, title: current.title }] : [];
+
   return (
     <div className="flex flex-col gap-8">
+      <ModuleCelebrationHost modules={celebrateModules} />
       <Breadcrumbs
         items={[
           { label: "Minha formação", href: "/plataforma" },

@@ -58,8 +58,8 @@ export function CertificateMedal({ className }: { className?: string }) {
     >
       <defs>
         <linearGradient id="medal-ribbon" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1fd877" />
-          <stop offset="100%" stopColor="#0a6b3a" />
+          <stop offset="0%" stopColor="#0abf04" />
+          <stop offset="100%" stopColor="#067202" />
         </linearGradient>
         <radialGradient id="medal-gold" cx="38%" cy="30%" r="75%">
           <stop offset="0%" stopColor="#fbeec2" />
@@ -79,8 +79,8 @@ export function CertificateMedal({ className }: { className?: string }) {
 
       <path d={RIBBON_LEFT_PATH} fill="url(#medal-ribbon)" />
       <path d={RIBBON_RIGHT_PATH} fill="url(#medal-ribbon)" />
-      <path d={RIBBON_LEFT_FOLD_PATH} fill="#064d29" opacity="0.7" />
-      <path d={RIBBON_RIGHT_FOLD_PATH} fill="#064d29" opacity="0.7" />
+      <path d={RIBBON_LEFT_FOLD_PATH} fill="#045a01" opacity="0.7" />
+      <path d={RIBBON_RIGHT_FOLD_PATH} fill="#045a01" opacity="0.7" />
 
       <path d={ROSETTE} fill="url(#medal-gold)" />
       <circle cx={x} cy={y} r={MEDAL_RADII.ring} fill="url(#medal-ring)" />
@@ -92,7 +92,7 @@ export function CertificateMedal({ className }: { className?: string }) {
         <path key={d} d={d} fill="#e2c06a" opacity="0.9" />
       ))}
 
-      <path d={MEDAL_TREND_PATH} fill="none" stroke="#46eb93" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={MEDAL_TREND_PATH} fill="none" stroke="#2fd429" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
       <path d={MEDAL_ARROW_PATH} fill="none" stroke="#f0d999" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
 
       <ellipse cx={x - 8} cy={y - 26} rx="16" ry="5" fill="#fff" opacity="0.18" />
@@ -148,7 +148,7 @@ export function CertificateMockup({
 
       <div className="relative flex h-full flex-col items-center px-[9%] pt-[6%] pb-[5%] text-center text-[2.25cqw]">
         <div className="flex flex-col items-center gap-[0.45em]">
-          <LogoMark className="size-[2.1em] shadow-[0_0_24px_rgb(31_216_119/0.25)]" />
+          <LogoMark className="size-[2.1em] shadow-[0_0_24px_rgb(10_191_4/0.25)]" />
           <p className="text-[1.05em] font-bold tracking-[0.3em] text-mist-50">
             BULLEX <span className="text-brand-400">START</span>
           </p>

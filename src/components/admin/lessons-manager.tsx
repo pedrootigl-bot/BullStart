@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp, Eye, EyeOff, Loader2, Pencil, PlayCircle, Plus, Tra
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAdminAction } from "@/components/admin/use-admin-action";
+import { ThumbnailUpload } from "@/components/admin/thumbnail-upload";
 import { VideoUpload } from "@/components/admin/video-upload";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -139,15 +140,28 @@ function LessonForm({ lesson, modules, defaultModuleId, onDone }: { lesson: Admi
             onUploaded={(path, duration) => setForm((f) => ({ ...f, videoAssetId: path, durationSeconds: duration > 0 ? String(duration) : f.durationSeconds }))}
           />
         )}
-        {!lesson && <p className="text-xs text-mist-500">Salve a aula para habilitar o envio de vídeo.</p>}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Duração (segundos)" htmlFor="l-dur" hint="Usada no cálculo do tempo mínimo assistido.">
-            <Input id="l-dur" type="number" min={0} max={86400} value={form.durationSeconds} onChange={(e) => set("durationSeconds", e.target.value)} />
-          </Field>
-          <Field label="Miniatura (URL https, opcional)" htmlFor="l-thumb">
-            <Input id="l-thumb" value={form.thumbnailUrl} maxLength={1024} onChange={(e) => set("thumbnailUrl", e.target.value)} />
-          </Field>
-        </div>
+        {!lesson && <p className="text-xs text-mist-500">Salve a aula para habilitar o envio de vídeo e miniatura.</p>}
+        <Field label="Duração (segundos)" htmlFor="l-dur" hint="Usada no cálculo do tempo mínimo assistido.">
+          <Input id="l-dur" type="number" min={0} max={86400} value={form.durationSeconds} onChange={(e) => set("durationSeconds", e.target.value)} />
+        </Field>
+        <Field label="Miniatura (opcional)" htmlFor="l-thumb" hint="Arraste uma imagem ou informe uma URL https.">
+          {lesson ? (
+            <ThumbnailUpload
+              lessonId={lesson.id}
+              currentUrl={form.thumbnailUrl}
+              onUploaded={(url) => set("thumbnailUrl", url)}
+              onCleared={() => set("thumbnailUrl", "")}
+            />
+          ) : null}
+          <Input
+            id="l-thumb"
+            value={form.thumbnailUrl}
+            maxLength={1024}
+            placeholder="https://… ou caminho /images/…"
+            onChange={(e) => set("thumbnailUrl", e.target.value)}
+            className={lesson ? "mt-3 font-mono text-xs" : undefined}
+          />
+        </Field>
       </fieldset>
 
       <div className="flex flex-wrap gap-5">
