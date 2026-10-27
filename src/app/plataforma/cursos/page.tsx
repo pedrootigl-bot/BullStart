@@ -3,7 +3,7 @@ import { FormationsCatalog } from "@/components/platform/formations-catalog";
 import { getStudentContext } from "@/lib/access/student";
 import { filterLaunchModules } from "@/lib/catalog/launch";
 
-export const metadata: Metadata = { title: "Formações BullStart" };
+export const metadata: Metadata = { title: "Formações Bull Academy" };
 
 export default async function CursosPage() {
   const { snapshot } = await getStudentContext();

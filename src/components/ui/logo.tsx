@@ -20,11 +20,11 @@ export function LogoMark({ className }: { className?: string }) {
 
 export function Logo({ href = "/", className }: { href?: string; className?: string }) {
   return (
-    <Link href={href} className={cn("group inline-flex items-center gap-2.5", className)} aria-label="Bullex Start — início">
+    <Link href={href} className={cn("group inline-flex items-center gap-2.5", className)} aria-label="Bull Academy — início">
       <LogoMark className="transition-transform duration-300 group-hover:-rotate-6" />
       <span className="flex flex-col leading-none whitespace-nowrap">
         <span className="text-[15px] font-bold tracking-[0.14em] text-mist-50">
-          BULLEX <span className="text-brand-400">START</span>
+          BULL <span className="text-brand-400">ACADEMY</span>
         </span>
         <span className="mt-1 text-[10px] font-medium tracking-[0.18em] text-mist-500 uppercase">Formação Trader</span>
       </span>
@@ -32,17 +32,17 @@ export function Logo({ href = "/", className }: { href?: string; className?: str
   );
 }
 
-/** Compacto para topbar da plataforma (padrão shell BullVerse). */
+/** Compacto para topbar da plataforma. */
 export function LogoCompact({ href = "/plataforma", className }: { href?: string; className?: string }) {
   return (
     <Link
       href={href}
       className={cn("inline-flex items-center gap-[0.55rem] text-inherit no-underline", className)}
-      aria-label="Bullex Start — início"
+      aria-label="Bull Academy — início"
     >
       <LogoMark className="size-8" />
       <span className="text-[1.2rem] font-extrabold tracking-[-0.03em] text-mist-50 italic">
-        Bullex <span className="not-italic text-brand-500">Start</span>
+        Bull <span className="not-italic text-brand-500">Academy</span>
       </span>
     </Link>
   );

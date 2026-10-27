@@ -38,7 +38,7 @@ export default async function CertificatePage() {
       <Breadcrumbs items={[{ label: "Minha formação", href: "/plataforma" }, { label: "Certificado" }]} />
 
       <header className="max-w-3xl">
-        <p className="eyebrow">Certificação Bullex Start</p>
+        <p className="eyebrow">Certificação Bull Academy</p>
         <h1 className="mt-2 text-2xl font-semibold text-mist-50 sm:text-3xl">Seu conhecimento merece reconhecimento.</h1>
         <p className="mt-2 text-sm leading-relaxed text-mist-400">
           O certificado de conclusão é liberado após concluir as aulas e a prova do módulo disponível nesta primeira

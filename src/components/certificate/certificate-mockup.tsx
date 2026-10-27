@@ -114,7 +114,7 @@ function SignatureColumn({ value, label, serif = false }: { value: string; label
 
 export function CertificateMockup({
   holderName = "Nome do Aluno",
-  programName = "Formação Trader Bullex",
+  programName = "Formação Trader Bull Academy",
   completedAt = "dd de mês de aaaa",
   workloadHours,
   className,
@@ -133,7 +133,7 @@ export function CertificateMockup({
         "@container relative aspect-[1.414/1] w-full overflow-hidden rounded-xl border border-gold-400/35 bg-[#070908] shadow-2xl shadow-black/70",
         className,
       )}
-      aria-label={sample ? "Exemplo ilustrativo do certificado Bullex Start" : `Certificado de ${holderName}`}
+      aria-label={sample ? "Exemplo ilustrativo do certificado Bull Academy" : `Certificado de ${holderName}`}
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_35%,rgb(22_34_29)_0%,#070908_70%)]" />
       <div className="absolute -top-1/4 -left-1/4 h-3/4 w-3/4 rotate-12 bg-linear-to-br from-brand-500/15 via-brand-500/[0.04] to-transparent blur-2xl" />
@@ -150,7 +150,7 @@ export function CertificateMockup({
         <div className="flex flex-col items-center gap-[0.45em]">
           <LogoMark className="size-[2.1em] shadow-[0_0_24px_rgb(10_191_4/0.25)]" />
           <p className="text-[1.05em] font-bold tracking-[0.3em] text-mist-50">
-            BULLEX <span className="text-brand-400">START</span>
+            BULL <span className="text-brand-400">ACADEMY</span>
           </p>
           <div className="flex items-center gap-[0.8em]">
             <span className="h-px w-[2.2em] bg-gold-400/70" />
@@ -177,7 +177,7 @@ export function CertificateMockup({
         <div className="mt-auto grid w-full grid-cols-[1fr_auto_1fr] items-end gap-[1.5em]">
           <SignatureColumn value={completedAt} label="Data de conclusão" />
           <CertificateMedal className="w-[5.3em]" />
-          <SignatureColumn value="Bullex Academy" label="Emissor" serif />
+          <SignatureColumn value="Bull Academy" label="Emissor" serif />
         </div>
       </div>
 

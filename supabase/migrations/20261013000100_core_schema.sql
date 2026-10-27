@@ -1,4 +1,4 @@
--- Bullex Start — esquema principal
+-- Bull Academy — esquema principal
 -- Tabelas de catálogo (cursos, módulos, aulas), progresso, elegibilidade, certificados e auditoria.
 
 create extension if not exists citext with schema extensions;

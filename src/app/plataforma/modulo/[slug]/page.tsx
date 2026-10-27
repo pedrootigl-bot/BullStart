@@ -94,7 +94,7 @@ export default async function ModulePage({ params }: PageProps<"/plataforma/modu
           <div className="surface px-5">
             <RequirementList outcomes={current.access.outcomes} />
             {current.access.via === "manual_grant" && (
-              <p className="pb-4 text-sm text-sky-300">Este módulo foi liberado individualmente pela equipe Bullex Start.</p>
+              <p className="pb-4 text-sm text-sky-300">Este módulo foi liberado individualmente pela equipe Bull Academy.</p>
             )}
           </div>
         ) : (

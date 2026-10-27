@@ -29,7 +29,7 @@ export async function GET(_request: Request, ctx: RouteContext<"/api/certificate
 
   const pdf = await renderCertificatePdf({
     holderName: certificate.holder_name,
-    programName: course?.title ?? "Formação Trader Bullex",
+    programName: course?.title ?? "Formação Trader Bull Academy",
     completedAt: new Date(certificate.completed_at),
     workloadHours: certificate.workload_hours,
   });
@@ -37,7 +37,7 @@ export async function GET(_request: Request, ctx: RouteContext<"/api/certificate
   return new Response(Buffer.from(pdf), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="certificado-bullex-start-${certificate.verification_code}.pdf"`,
+      "Content-Disposition": `attachment; filename="certificado-bull-academy-${certificate.verification_code}.pdf"`,
       "Cache-Control": "private, no-store",
     },
   });

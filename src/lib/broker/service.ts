@@ -167,7 +167,7 @@ export class BrokerIntegrationService {
     if (!candidate) return { status: "ignored", detail: "no_matching_profile" };
     if (candidate.broker_user_id) return { status: "ignored", detail: "link_conflict" };
 
-    // O vínculo por e-mail só é aceito se o e-mail do aluno foi verificado no Bullex Start;
+    // O vínculo por e-mail só é aceito se o e-mail do aluno foi verificado na Bull Academy;
     // caso contrário alguém poderia se cadastrar com o e-mail de terceiros e herdar o vínculo.
     const { data: authUser } = await this.db.auth.admin.getUserById(candidate.auth_user_id);
     if (!authUser.user?.email_confirmed_at) return { status: "ignored", detail: "email_not_verified" };

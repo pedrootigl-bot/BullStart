@@ -88,7 +88,7 @@ export function WelcomeModal({ startHref }: WelcomeModalProps) {
               <div className="relative min-h-[220px] overflow-hidden md:min-h-[520px]">
                 <Image
                   src="/brand/welcome-bull.png"
-                  alt="Touro Bullex Start"
+                  alt="Touro Bull Academy"
                   fill
                   priority
                   quality={100}
@@ -112,14 +112,14 @@ export function WelcomeModal({ startHref }: WelcomeModalProps) {
                 <div className="flex items-center gap-2.5 pr-10">
                   <LogoMark className="size-8" />
                   <p className="text-[13px] font-bold tracking-[0.16em] text-mist-50">
-                    BULLEX <span className="text-brand-400">START</span>
+                    BULL <span className="text-brand-400">ACADEMY</span>
                   </p>
                 </div>
 
                 <h2 id={titleId} className="mt-5 text-[1.85rem] leading-[1.1] font-semibold text-mist-50 sm:text-[2.15rem]">
                   Bem-vindo à
                   <br />
-                  <span className="text-brand-400">Bullex Start</span>!
+                  <span className="text-brand-400">Bull Academy</span>!
                 </h2>
 
                 <p className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-brand-400/30 bg-brand-500/10 px-2.5 py-1 text-xs font-medium text-brand-300">

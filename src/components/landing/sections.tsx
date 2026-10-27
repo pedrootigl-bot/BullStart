@@ -125,9 +125,9 @@ export function About({ accessHref }: { accessHref: string }) {
         <Reveal className="flex flex-col gap-8">
           <SectionHeading
             id="sobre-title"
-            eyebrow="01 · Sobre o Bullex Start"
+            eyebrow="01 · Sobre a Bull Academy"
             title="Conhecimento para transformar sua maneira de operar."
-            description="O Bullex Start é a plataforma educacional da Bullex, criada para apresentar conceitos, ferramentas e metodologias do mercado financeiro de forma clara, prática e progressiva."
+            description="A Bull Academy é a plataforma educacional da Bullex, criada para apresentar conceitos, ferramentas e metodologias do mercado financeiro de forma clara, prática e progressiva."
           />
           <p className="text-sm leading-relaxed text-mist-400">
             O foco é educação: compreender como o mercado funciona, ler gráficos com critério, gerenciar riscos e
@@ -290,7 +290,7 @@ export function CertificateSection({ startHref }: { startHref: string }) {
                   Seu conhecimento merece <span className="text-gradient-gold">reconhecimento.</span>
                 </>
               }
-              description="Alunos elegíveis podem emitir o certificado de conclusão Bullex Start após cumprirem os requisitos educacionais da formação."
+              description="Alunos elegíveis podem emitir o certificado de conclusão Bull Academy após cumprirem os requisitos educacionais da formação."
             />
           </Reveal>
           <ul className="grid gap-4 sm:grid-cols-2">

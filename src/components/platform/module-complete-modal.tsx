@@ -121,7 +121,7 @@ export function ModuleCompleteModal({
                 <div className="flex items-center gap-2.5 pr-10">
                   <LogoMark className="size-8" />
                   <p className="text-[13px] font-bold tracking-[0.16em] text-mist-50">
-                    BULLEX <span className="text-brand-400">START</span>
+                    BULL <span className="text-brand-400">ACADEMY</span>
                   </p>
                 </div>
 
@@ -138,7 +138,7 @@ export function ModuleCompleteModal({
 
                 <p id={descId} className="mt-4 max-w-[34ch] text-sm leading-relaxed text-mist-300 sm:text-[15px]">
                   Você concluiu todas as aulas e foi aprovado na prova deste módulo. Continue sua evolução na trilha
-                  BullStart.
+                  Bull Academy.
                 </p>
 
                 <div className="mt-7 flex flex-col gap-3">

@@ -9,7 +9,7 @@ export default function SignUpPage() {
   return (
     <AuthShell
       title="Comece sua formação"
-      subtitle="Crie sua conta Bullex Start. O primeiro módulo é liberado assim que você entra."
+      subtitle="Crie sua conta Bull Academy. O primeiro módulo é liberado assim que você entra."
       footer={
         <>
           Já possui conta?{" "}

@@ -7,10 +7,10 @@ export default function TermsPage() {
   return (
     <PublicShell>
       <LegalArticle title="Termos de Uso" updatedAt="13 de outubro de 2026">
-        <p>Ao criar uma conta no Bullex Start você concorda com estes termos.</p>
+        <p>Ao criar uma conta na Bull Academy você concorda com estes termos.</p>
         <h2>Natureza do serviço</h2>
         <p>
-          O Bullex Start é uma plataforma de conteúdo educacional sobre mercado financeiro. O conteúdo não constitui
+          A Bull Academy é uma plataforma de conteúdo educacional sobre mercado financeiro. O conteúdo não constitui
           recomendação personalizada de investimento, consultoria ou promessa de resultados.
         </p>
         <h2>Conta e acesso</h2>

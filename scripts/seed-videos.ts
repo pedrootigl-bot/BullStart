@@ -14,8 +14,8 @@ import { config } from "dotenv";
 config({ path: ".env.local" });
 
 const VIDEOS = [
-  { path: "demo/aula-demo-a.mp4", seconds: 90, frequency: 440, label: "Bullex Start - Aula demo A" },
-  { path: "demo/aula-demo-b.mp4", seconds: 120, frequency: 523, label: "Bullex Start - Aula demo B" },
+  { path: "demo/aula-demo-a.mp4", seconds: 90, frequency: 440, label: "Bull Academy - Aula demo A" },
+  { path: "demo/aula-demo-b.mp4", seconds: 120, frequency: 523, label: "Bull Academy - Aula demo B" },
 ];
 
 async function main() {

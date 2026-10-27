@@ -1,10 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { MobileBottomNav } from "@/components/landing/mobile-bottom-nav";
 import { ButtonLink } from "@/components/ui/button";
-import { Logo } from "@/components/ui/logo";
-import { MenuToggleIcon, useMenuVariants } from "@/components/ui/menu-motion";
 import { cn } from "@/lib/cn";
 
 const LINKS = [
@@ -15,9 +14,7 @@ const LINKS = [
 
 export function Navbar({ accessHref }: { accessHref: string }) {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
-  const variants = useMenuVariants();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -27,133 +24,86 @@ export function Navbar({ accessHref }: { accessHref: string }) {
   }, []);
 
   useEffect(() => {
-    const sections = LINKS.map((link) => document.getElementById(link.id)).filter((el): el is HTMLElement => el !== null);
+    const sections = LINKS.map((link) => document.getElementById(link.id)).filter(
+      (el): el is HTMLElement => el !== null,
+    );
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
         if (visible) setActive(visible.target.id);
       },
-      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.25, 0.5] },
+      { rootMargin: "-45% 0px -45% 0px", threshold: [0.2, 0.45, 0.7] },
     );
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  // Em landscape (≥768px) o md já ativava o nav desktop sem espaço; fecha o drawer ao cruzar lg.
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const onChange = () => {
-      if (mq.matches) setOpen(false);
-    };
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled || open
-          ? "border-b border-white/[0.06] bg-ink-950/80 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent",
-      )}
-    >
-      <nav aria-label="Principal" className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
-        <Logo />
+    <>
+      <header
+        className={cn(
+          "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+          scrolled
+            ? "border-b border-white/[0.06] bg-ink-950/80 backdrop-blur-xl"
+            : "border-b border-transparent bg-transparent",
+        )}
+      >
+        <nav
+          aria-label="Principal"
+          className="relative mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 sm:gap-8 sm:px-8"
+        >
+          <Link
+            href="/"
+            className="group relative z-10 min-w-0 shrink text-inherit no-underline"
+            aria-label="Bull Academy — início"
+          >
+            <span className="flex flex-col leading-none">
+              <span className="font-serif text-[1.35rem] font-semibold tracking-[-0.02em] text-mist-50 transition-colors duration-300 group-hover:text-white sm:text-[1.5rem]">
+                Bull <span className="text-brand-400">Academy</span>
+              </span>
+              <span className="mt-1.5 text-[0.625rem] font-medium tracking-[0.22em] text-mist-500 uppercase transition-colors duration-300 group-hover:text-mist-400 sm:text-[0.6875rem]">
+                Formação de Traders
+              </span>
+            </span>
+          </Link>
 
-        <ul className="hidden items-center gap-1 lg:flex">
-          {LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                aria-current={active === link.id ? "true" : undefined}
-                className={cn(
-                  "relative rounded-lg px-4 py-2 text-sm font-medium transition-colors",
-                  active === link.id ? "text-mist-50" : "text-mist-300 hover:text-mist-50",
-                )}
-              >
-                {link.label}
-                <span
-                  aria-hidden="true"
+          <ul className="pointer-events-none absolute inset-x-0 top-1/2 hidden -translate-y-1/2 items-center justify-center gap-0.5 lg:flex">
+            {LINKS.map((link) => (
+              <li key={link.href} className="pointer-events-auto">
+                <a
+                  href={link.href}
+                  aria-current={active === link.id ? "true" : undefined}
                   className={cn(
-                    "absolute inset-x-4 -bottom-0.5 h-px bg-brand-400 transition-transform duration-300",
-                    active === link.id ? "scale-x-100" : "scale-x-0",
+                    "relative rounded-lg px-3.5 py-2 text-[0.8125rem] font-medium tracking-[0.02em] transition-colors",
+                    active === link.id ? "text-mist-50" : "text-mist-400 hover:text-mist-50",
                   )}
-                />
-              </a>
-            </li>
-          ))}
-        </ul>
+                >
+                  {link.label}
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute inset-x-3.5 -bottom-0.5 h-px origin-center bg-brand-400 transition-transform duration-300",
+                      active === link.id ? "scale-x-100" : "scale-x-0",
+                    )}
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
 
-        <div className="hidden lg:block">
-          <ButtonLink href={accessHref} size="sm" className="h-10 px-5">
+          <ButtonLink
+            href={accessHref}
+            size="sm"
+            className="relative z-10 h-9 shrink-0 px-3.5 text-[0.75rem] tracking-[0.01em] sm:h-10 sm:px-5 sm:text-[0.8125rem]"
+          >
             Acessar Plataforma
           </ButtonLink>
-        </div>
+        </nav>
+      </header>
 
-        <button
-          type="button"
-          className="grid size-11 place-items-center rounded-xl text-mist-100 transition-colors hover:bg-white/5 lg:hidden"
-          aria-expanded={open}
-          aria-controls="menu-mobile"
-          aria-label={open ? "Fechar menu" : "Abrir menu"}
-          onClick={() => setOpen((value) => !value)}
-        >
-          <MenuToggleIcon open={open} />
-        </button>
-      </nav>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            id="menu-mobile"
-            key="menu-mobile"
-            initial="closed"
-            animate="open"
-            exit="closed"
-            variants={variants.panel}
-            className="h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-white/[0.06] bg-ink-950/95 px-5 pt-6 pb-10 lg:hidden"
-          >
-            <motion.ul variants={variants.list} className="flex flex-col gap-1">
-              {LINKS.map((link) => (
-                <motion.li key={link.href} variants={variants.item}>
-                  <a
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    aria-current={active === link.id ? "true" : undefined}
-                    className={cn(
-                      "flex items-center justify-between rounded-xl px-4 py-4 text-lg font-medium transition-colors hover:bg-white/5",
-                      active === link.id ? "text-brand-300" : "text-mist-100",
-                    )}
-                  >
-                    {link.label}
-                    <span
-                      aria-hidden="true"
-                      className={cn("size-1.5 rounded-full bg-brand-400 transition-opacity", active === link.id ? "opacity-100" : "opacity-0")}
-                    />
-                  </a>
-                </motion.li>
-              ))}
-              <motion.li variants={variants.item} className="pt-5">
-                <ButtonLink href={accessHref} size="lg" className="w-full" onClick={() => setOpen(false)}>
-                  Acessar Plataforma
-                </ButtonLink>
-              </motion.li>
-            </motion.ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+      <MobileBottomNav activeSection={active} />
+    </>
   );
 }

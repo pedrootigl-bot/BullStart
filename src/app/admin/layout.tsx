@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { requireAdmin } from "@/lib/auth/session";
 
-export const metadata: Metadata = { title: { default: "Administração", template: "%s · Admin Bullex Start" }, robots: { index: false } };
+export const metadata: Metadata = { title: { default: "Administração", template: "%s · Admin Bull Academy" }, robots: { index: false } };
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const { profile } = await requireAdmin();

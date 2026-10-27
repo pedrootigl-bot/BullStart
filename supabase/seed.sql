@@ -1,9 +1,9 @@
 -- Seed de DESENVOLVIMENTO (executado apenas por `supabase db reset` local).
 -- Conteúdo educacional demonstrativo; nenhum dado financeiro real.
 -- Usuários locais:
---   admin@bullexstart.local  / BullexAdmin2026  (admin)
---   aluno@bullexstart.local  / BullexAluno2026  (aluno com vínculo DEV com a corretora)
---   novo@bullexstart.local   / BullexNovo2026   (aluno sem vínculo verificado)
+--   admin@bullacademy.local  / BullexAdmin2026  (admin)
+--   aluno@bullacademy.local  / BullexAluno2026  (aluno com vínculo DEV com a corretora)
+--   novo@bullacademy.local   / BullexNovo2026   (aluno sem vínculo verificado)
 
 -- ---------------------------------------------------------------------------
 -- Usuários (Supabase Auth local)
@@ -11,9 +11,9 @@
 do $$
 declare
   v_users jsonb := '[
-    {"id": "a0000000-0000-4000-8000-000000000001", "email": "admin@bullexstart.local", "password": "BullexAdmin2026", "name": "Equipe Bullex Start"},
-    {"id": "a0000000-0000-4000-8000-000000000002", "email": "aluno@bullexstart.local", "password": "BullexAluno2026", "name": "Marina Duarte Alves"},
-    {"id": "a0000000-0000-4000-8000-000000000003", "email": "novo@bullexstart.local",  "password": "BullexNovo2026",  "name": "Rafael Nogueira"}
+    {"id": "a0000000-0000-4000-8000-000000000001", "email": "admin@bullacademy.local", "password": "BullexAdmin2026", "name": "Equipe Bull Academy"},
+    {"id": "a0000000-0000-4000-8000-000000000002", "email": "aluno@bullacademy.local", "password": "BullexAluno2026", "name": "Marina Duarte Alves"},
+    {"id": "a0000000-0000-4000-8000-000000000003", "email": "novo@bullacademy.local",  "password": "BullexNovo2026",  "name": "Rafael Nogueira"}
   ]';
   v_user jsonb;
 begin
@@ -68,9 +68,9 @@ where auth_user_id = 'a0000000-0000-4000-8000-000000000002';
 insert into public.courses (id, title, slug, description, is_published, workload_hours, completion_min_watch_ratio)
 values (
   'c0000000-0000-4000-8000-000000000001',
-  'Formação Trader Bullex',
+  'Formação Trader Bull Academy',
   'formacao-trader-bullex',
-  'Programa educacional Bullex Start: fundamentos do mercado financeiro, leitura de gráficos, análise técnica, gestão de risco e disciplina.',
+  'Programa educacional Bull Academy: fundamentos do mercado financeiro, leitura de gráficos, análise técnica, gestão de risco e disciplina.',
   true,
   12,
   0.80

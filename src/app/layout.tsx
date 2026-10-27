@@ -19,12 +19,12 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: {
-    default: "Bullex Start — Formação Trader Bullex",
-    template: "%s · Bullex Start",
+    default: "Bull Academy — Formação Trader",
+    template: "%s · Bull Academy",
   },
   description:
-    "Sua jornada para evoluir como trader começa aqui. Plataforma educacional Bullex Start com módulos, acompanhamento de progresso e certificado de conclusão.",
-  applicationName: "Bullex Start",
+    "Sua jornada para evoluir como trader começa aqui. Plataforma educacional Bull Academy com módulos, acompanhamento de progresso e certificado de conclusão.",
+  applicationName: "Bull Academy",
 };
 
 export const viewport: Viewport = {

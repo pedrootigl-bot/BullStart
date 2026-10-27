@@ -4,7 +4,7 @@ import { Logo } from "@/components/ui/logo";
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="border-t border-white/[0.06] bg-ink-950">
+    <footer className="border-t border-white/[0.06] bg-ink-950 pb-[calc(4.75rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="flex flex-col gap-4">
           <Logo />
@@ -14,7 +14,7 @@ export function Footer() {
         </div>
 
         <nav aria-label="Institucional">
-          <h2 className="text-sm font-semibold text-mist-50">Bullex Start</h2>
+          <h2 className="text-sm font-semibold text-mist-50">Bull Academy</h2>
           <ul className="mt-4 flex flex-col gap-2.5 text-sm text-mist-400">
             <li>
               <Link href="/#sobre" className="hover:text-brand-300">Sobre</Link>
@@ -50,12 +50,12 @@ export function Footer() {
       <div className="border-t border-white/[0.06]">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-xs leading-relaxed text-mist-500 sm:px-8">
           <p>
-            <strong className="font-semibold text-mist-400">Aviso importante:</strong> o conteúdo do Bullex Start tem
+            <strong className="font-semibold text-mist-400">Aviso importante:</strong> o conteúdo da Bull Academy tem
             finalidade exclusivamente educacional, não constitui recomendação personalizada de investimento e não
             garante resultados. Operações no mercado financeiro envolvem riscos, inclusive de perda do capital
             investido. Resultados passados não garantem resultados futuros.
           </p>
-          <p>© {year} Bullex Start. Todos os direitos reservados.</p>
+          <p>© {year} Bull Academy. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>

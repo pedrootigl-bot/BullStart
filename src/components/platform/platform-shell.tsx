@@ -1,6 +1,18 @@
 "use client";
 
-import { Award, GraduationCap, Home, LogOut, Shield, User } from "lucide-react";
+import {
+  Award,
+  ChevronDown,
+  ExternalLink,
+  Globe2,
+  GraduationCap,
+  Home,
+  LayoutGrid,
+  LogOut,
+  Shield,
+  TrendingUp,
+  User,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,6 +23,25 @@ import { signOutAction } from "@/lib/auth/actions";
 import { cn } from "@/lib/cn";
 
 type NavItem = { href: string; label: string; icon: typeof Home; exact?: boolean };
+
+type PlatformLink = {
+  href: string;
+  label: string;
+  icon: typeof Home;
+};
+
+const PLATFORM_LINKS: PlatformLink[] = [
+  {
+    href: "https://trade.bull-ex.com/pt",
+    label: "Bullex",
+    icon: TrendingUp,
+  },
+  {
+    href: "https://bullverse.campanhasbullex.com/missoes",
+    label: "Bullverse",
+    icon: Globe2,
+  },
+];
 
 function buildNav(isAdmin: boolean): NavItem[] {
   return [
@@ -44,6 +75,83 @@ function initialsOf(name: string) {
     .join("");
 }
 
+function PlatformsMenu({ onNavigate }: { onNavigate?: () => void }) {
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+
+  return (
+    <div>
+      <button
+        type="button"
+        className={cn(
+          "group flex w-full items-center gap-3 rounded-xl border px-3.5 py-3 text-left text-[0.92rem] font-semibold transition-[color,background-color,border-color] duration-200 ease-out",
+          open
+            ? "border-brand-500/25 bg-brand-500/8 text-mist-50"
+            : "border-transparent text-mist-400 hover:bg-brand-500/10 hover:text-mist-50",
+        )}
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <LayoutGrid
+          className={cn(
+            "size-[18px] shrink-0 transition-colors duration-200",
+            open ? "text-brand-500" : "text-current group-hover:text-brand-500",
+          )}
+          aria-hidden="true"
+        />
+        <span className="min-w-0 flex-1 truncate">Plataformas</span>
+        <ChevronDown
+          className={cn(
+            "size-4 shrink-0 text-mist-500 transition-transform duration-200 ease-out",
+            open && "rotate-180 text-brand-500",
+          )}
+          aria-hidden="true"
+        />
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            id={panelId}
+            key="platforms-panel"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <ul className="relative mt-1 ml-4 flex flex-col gap-0.5 border-l border-brand-500/35 py-1 pl-3">
+              {PLATFORM_LINKS.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={onNavigate}
+                    className="group/item flex items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-[0.88rem] font-semibold text-mist-200 no-underline transition-colors duration-200 hover:bg-brand-500/10 hover:text-white"
+                  >
+                    <item.icon
+                      className="size-4 shrink-0 text-mist-400 transition-colors group-hover/item:text-brand-500"
+                      aria-hidden="true"
+                    />
+                    <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                    <ExternalLink
+                      className="size-3.5 shrink-0 text-mist-500 opacity-70 transition-opacity group-hover/item:opacity-100"
+                      aria-hidden="true"
+                    />
+                    <span className="sr-only">(abre em nova aba)</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function SidebarNav({
   items,
   pathname,
@@ -55,6 +163,7 @@ function SidebarNav({
 }) {
   return (
     <nav aria-label="Menu principal" className="flex flex-col gap-0.5">
+      <PlatformsMenu onNavigate={onNavigate} />
       {items.map((item) => {
         const active = isNavActive(pathname, item);
         return (
@@ -64,20 +173,20 @@ function SidebarNav({
             aria-current={active ? "page" : undefined}
             onClick={onNavigate}
             className={cn(
-              "group relative flex items-center gap-3 rounded-xl px-3.5 py-3 text-[0.92rem] font-medium no-underline transition-all duration-300",
+              "group relative flex items-center gap-3 rounded-xl border px-3.5 py-3 text-[0.92rem] font-semibold no-underline transition-[color,background-color,border-color,box-shadow] duration-200 ease-out",
               active
-                ? "platform-nav-active border border-brand-500/60 font-bold text-white"
-                : "border border-transparent text-mist-400 hover:bg-brand-500/10 hover:text-mist-50 active:scale-[0.985]",
+                ? "platform-nav-active border-brand-500/60 text-white"
+                : "border-transparent text-mist-400 hover:bg-brand-500/10 hover:text-mist-50",
             )}
           >
             <item.icon
               className={cn(
-                "size-[18px] transition-all duration-300",
-                active ? "text-brand-500" : "text-current group-hover:translate-x-0.5 group-hover:text-brand-500",
+                "size-[18px] shrink-0 transition-colors duration-200 ease-out",
+                active ? "text-brand-500" : "text-current group-hover:text-brand-500",
               )}
               aria-hidden="true"
             />
-            <span>{item.label}</span>
+            <span className="min-w-0 truncate">{item.label}</span>
           </Link>
         );
       })}

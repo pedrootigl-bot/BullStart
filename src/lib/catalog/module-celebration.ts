@@ -1,6 +1,6 @@
 /** Persistência local: módulos cuja parabenização já foi exibida neste navegador. */
 
-const STORAGE_KEY = "bullstart:celebrated-modules";
+const STORAGE_KEY = "bull-academy:celebrated-modules";
 
 function readIds(): string[] {
   try {

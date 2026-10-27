@@ -107,7 +107,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/plataf
             Bem-vindo, <span className="text-gradient-brand">{firstName(session.profile.full_name)}</span>
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-mist-300 sm:text-base">
-            Continue sua evolução no Bullex Start e acompanhe cada etapa da sua formação.
+            Continue sua evolução na Bull Academy e acompanhe cada etapa da sua formação.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             {resume ? (

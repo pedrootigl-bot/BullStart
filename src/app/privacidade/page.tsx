@@ -8,7 +8,7 @@ export default function PrivacyPage() {
     <PublicShell>
       <LegalArticle title="Política de Privacidade" updatedAt="13 de outubro de 2026">
         <p>
-          Esta política descreve como o Bullex Start trata dados pessoais de alunos, em conformidade com a Lei Geral de
+          Esta política descreve como a Bull Academy trata dados pessoais de alunos, em conformidade com a Lei Geral de
           Proteção de Dados (Lei nº 13.709/2018).
         </p>
         <h2>Dados tratados</h2>

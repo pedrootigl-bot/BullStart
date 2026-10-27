@@ -22,7 +22,7 @@ export default async function VerifyLandingPage({ searchParams }: PageProps<"/ce
         <header>
           <ShieldCheck className="size-10 text-brand-400" aria-hidden="true" />
           <h1 className="mt-4 text-3xl font-semibold text-mist-50">Verificar certificado</h1>
-          <p className="mt-2 text-mist-400">Informe o código de validação impresso no certificado Bullex Start.</p>
+          <p className="mt-2 text-mist-400">Informe o código de validação impresso no certificado Bull Academy.</p>
         </header>
         <form action={verifyAction} className="surface flex flex-col gap-4 p-6 sm:flex-row sm:items-end">
           <Field

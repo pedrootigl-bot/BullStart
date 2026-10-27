@@ -1,4 +1,4 @@
--- Bullex Start — RLS, privilégios e funções de domínio
+-- Bull Academy — RLS, privilégios e funções de domínio
 --
 -- Modelo de segurança:
 --   * O navegador nunca fala direto com o banco; o servidor Next.js usa o JWT do aluno (RLS)

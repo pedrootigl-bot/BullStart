@@ -12,7 +12,7 @@ export default function RiskNoticePage() {
           total do capital. Instrumentos alavancados ampliam tanto ganhos quanto perdas.
         </p>
         <ul>
-          <li>O conteúdo do Bullex Start é exclusivamente educacional e não garante resultados.</li>
+          <li>O conteúdo da Bull Academy é exclusivamente educacional e não garante resultados.</li>
           <li>Nenhuma aula constitui recomendação de compra, venda ou manutenção de ativos.</li>
           <li>Resultados passados, simulações e exemplos não garantem resultados futuros.</li>
           <li>Opere apenas com recursos cuja perda não comprometa sua situação financeira.</li>

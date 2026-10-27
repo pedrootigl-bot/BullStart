@@ -9,8 +9,8 @@ const url = process.env.SUPABASE_URL ?? "";
 const anonKey = process.env.SUPABASE_ANON_KEY ?? "";
 const enabled = process.env.RUN_INTEGRATION === "1" && Boolean(url && anonKey);
 
-const STUDENT = { email: "aluno@bullexstart.local", password: "BullexAluno2026" };
-const NEW_STUDENT = { email: "novo@bullexstart.local", password: "BullexNovo2026" };
+const STUDENT = { email: "aluno@bullacademy.local", password: "BullexAluno2026" };
+const NEW_STUDENT = { email: "novo@bullacademy.local", password: "BullexNovo2026" };
 
 function client(): SupabaseClient<Database> {
   return createClient<Database>(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });

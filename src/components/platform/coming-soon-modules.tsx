@@ -25,7 +25,7 @@ export function ComingSoonModules() {
         </p>
         <p className="mt-1 flex items-center gap-2 text-sm text-mist-500">
           <Bell className="size-4 shrink-0 text-brand-400" aria-hidden="true" />
-          Fique de olho no e-mail da sua conta Bullex Start
+          Fique de olho no e-mail da sua conta Bull Academy
         </p>
       </div>
     </section>

@@ -121,13 +121,13 @@ function drawSignatureColumn(
   centerText(page, label.toUpperCase(), y - 16, labelFont, 7.5, MUTED, cx);
 }
 
-/** Certificado A4 paisagem com identidade Bullex Start. Fontes padrão (WinAnsi) cobrem acentuação pt-BR. */
+/** Certificado A4 paisagem com identidade Bull Academy. Fontes padrão (WinAnsi) cobrem acentuação pt-BR. */
 export async function renderCertificatePdf(input: CertificatePdfInput): Promise<Uint8Array> {
   const pdf = await PDFDocument.create();
-  pdf.setTitle(`Certificado Bullex Start — ${input.holderName}`);
-  pdf.setAuthor("Bullex Start");
+  pdf.setTitle(`Certificado Bull Academy — ${input.holderName}`);
+  pdf.setAuthor("Bull Academy");
   pdf.setSubject(input.programName);
-  pdf.setCreator("Bullex Start");
+  pdf.setCreator("Bull Academy");
 
   const page = pdf.addPage([841.89, 595.28]);
   const { width, height } = page.getSize();
@@ -164,9 +164,9 @@ export async function renderCertificatePdf(input: CertificatePdfInput): Promise<
   });
 
   const brandSize = 16;
-  const brandX = cx - bold.widthOfTextAtSize("BULLEX START", brandSize) / 2;
-  page.drawText("BULLEX ", { x: brandX, y: height - 124, size: brandSize, font: bold, color: WHITE });
-  page.drawText("START", { x: brandX + bold.widthOfTextAtSize("BULLEX ", brandSize), y: height - 124, size: brandSize, font: bold, color: GREEN });
+  const brandX = cx - bold.widthOfTextAtSize("BULL ACADEMY", brandSize) / 2;
+  page.drawText("BULL ", { x: brandX, y: height - 124, size: brandSize, font: bold, color: WHITE });
+  page.drawText("ACADEMY", { x: brandX + bold.widthOfTextAtSize("BULL ", brandSize), y: height - 124, size: brandSize, font: bold, color: GREEN });
 
   const program = input.programName.toUpperCase();
   const programWidth = regular.widthOfTextAtSize(program, 8.5);
@@ -187,7 +187,7 @@ export async function renderCertificatePdf(input: CertificatePdfInput): Promise<
   drawMedal(page, cx, 62, 0.95);
 
   drawSignatureColumn(page, 205, 126, formatDatePtBr(input.completedAt), "Data de conclusão", bold, regular);
-  drawSignatureColumn(page, width - 205, 126, "Bullex Academy", "Emissor", serifItalic, regular);
+  drawSignatureColumn(page, width - 205, 126, "Bull Academy", "Emissor", serifItalic, regular);
 
   centerText(
     page,

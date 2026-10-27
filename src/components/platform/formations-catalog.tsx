@@ -81,7 +81,7 @@ function FormationCard({
     >
       {/* Imagem + badges + título sobre o fade */}
       <div className="relative aspect-[5/4] overflow-hidden sm:aspect-[4/3]">
-        {/* Arte gerada pelo time BullStart; assets locais em /public/brand. */}
+        {/* Arte gerada pelo time Bull Academy; assets locais em /public/brand. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={formation.imageSrc}
@@ -210,7 +210,7 @@ export function FormationsCatalog({
         <div className="max-w-lg">
           <p className="eyebrow">Catálogo de cursos</p>
           <h1 id="formacoes-titulo" className="mt-2 text-3xl font-semibold tracking-tight text-mist-50 sm:text-4xl">
-            Formações BullStart
+            Formações Bull Academy
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-mist-400 sm:text-[0.95rem]">
             Escolha o próximo passo da sua jornada até se tornar um trader consistente.

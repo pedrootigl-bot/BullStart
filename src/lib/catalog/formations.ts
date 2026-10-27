@@ -14,7 +14,7 @@ export type FormationCatalogItem = {
   requirements: string[];
 };
 
-/** Catálogo de formações exibido em /plataforma/cursos (referência visual BullStart). */
+/** Catálogo de formações exibido em /plataforma/cursos (referência visual Bull Academy). */
 export const FORMATIONS: FormationCatalogItem[] = [
   {
     id: "trader",
@@ -32,10 +32,10 @@ export const FORMATIONS: FormationCatalogItem[] = [
   {
     id: "silver",
     levelLabel: "Nível Intermediário",
-    title: "BullStart Silver",
+    title: "Bull Academy Silver",
     description: "Estratégias avançadas, ampliação de repertório e leitura de mercado profissional.",
     imageSrc: "/brand/formation-silver.jpg",
-    imageAlt: "BullStart Silver — trader com máscara de touro em escritório com escultura prata",
+    imageAlt: "Bull Academy Silver — trader com máscara de touro em escritório com escultura prata",
     modulesLabel: "18 módulos",
     hoursLabel: "30h",
     certificateLabel: "Certificado ao concluir",
@@ -45,18 +45,18 @@ export const FORMATIONS: FormationCatalogItem[] = [
   {
     id: "gold",
     levelLabel: "Nível Avançado",
-    title: "BullStart Gold",
+    title: "Bull Academy Gold",
     description: "Alta performance, visão institucional e estratégias exclusivas para traders de elite.",
     imageSrc: "/brand/formation-gold.jpg",
-    imageAlt: "BullStart Gold — trader com máscara de touro em escritório premium dourado",
+    imageAlt: "Bull Academy Gold — trader com máscara de touro em escritório premium dourado",
     modulesLabel: "25 módulos",
     hoursLabel: "40h",
     certificateLabel: "Certificado ao concluir",
     href: null,
     requirements: [
-      "Aprovação no curso BullStart Silver",
+      "Aprovação no curso Bull Academy Silver",
       "Depósito mínimo de R$ 5.000,00",
-      "Convite da equipe BullStart",
+      "Convite da equipe Bull Academy",
     ],
   },
 ];

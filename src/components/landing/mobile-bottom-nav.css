@@ -1,0 +1,238 @@
+/* Prefixo mba- (mobile bottom academy): CSS global — Turbopack+Tailwind não mapeia CSS Modules. */
+
+.mba-bar {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .mba-bar {
+    --nav-green: #0abf04;
+    --nav-ease: cubic-bezier(0.33, 1, 0.32, 1);
+    --orb-x: 0px;
+    --indicator-x: 0px;
+    --orb-duration: 520ms;
+    position: fixed;
+    left: 50%;
+    bottom: max(0.45rem, env(safe-area-inset-bottom, 0px));
+    z-index: 90;
+    display: block;
+    width: min(340px, calc(100% - 2.4rem));
+    transform: translate3d(-50%, 0, 0);
+    pointer-events: none;
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.55));
+  }
+
+  .mba-barEnter {
+    animation: mba-barEnter 0.55s var(--nav-ease) both;
+  }
+
+  .mba-barInner {
+    position: relative;
+    isolation: isolate;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    height: 3.65rem;
+    padding: 0 0.22rem;
+    border-radius: 1.15rem;
+    border: 1px solid rgba(10, 191, 4, 0.22);
+    background: rgba(5, 5, 5, 0.92);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 10px 28px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(10, 191, 4, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    pointer-events: auto;
+    overflow: visible;
+  }
+
+  .mba-barInner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(110deg, transparent, rgba(183, 255, 208, 0.04), transparent);
+    pointer-events: none;
+  }
+
+  .mba-orb,
+  .mba-orbGlow,
+  .mba-indicator {
+    opacity: 0;
+    transition:
+      transform var(--orb-duration) var(--nav-ease),
+      opacity 0.2s ease;
+  }
+
+  .mba-bar[data-orb-ready="true"] .mba-orb,
+  .mba-bar[data-orb-ready="true"] .mba-orbGlow,
+  .mba-bar[data-orb-ready="true"] .mba-indicator {
+    opacity: 1;
+  }
+
+  .mba-orbGlow {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0.55rem;
+    width: 2.35rem;
+    height: 2.55rem;
+    transform: translate3d(var(--orb-x), 0, 0);
+    background: radial-gradient(ellipse, rgba(10, 191, 4, 0.28), transparent 72%);
+    filter: blur(8px);
+    pointer-events: none;
+  }
+
+  .mba-orb {
+    position: absolute;
+    width: 2.35rem;
+    height: 2.35rem;
+    top: -0.72rem;
+    left: 0;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: 0.85rem;
+    background: radial-gradient(
+      circle at 36% 22%,
+      #4ad646 0%,
+      #0abf04 42%,
+      #078c03 78%,
+      #046402 100%
+    );
+    border: 1px solid rgba(10, 191, 4, 0.55);
+    box-shadow:
+      0 0 0 4px rgba(10, 191, 4, 0.12),
+      0 4px 12px rgba(10, 191, 4, 0.3),
+      inset 0 2px 2px rgba(255, 255, 255, 0.28),
+      inset 0 -3px 7px rgba(4, 80, 2, 0.55);
+    transform: translate3d(var(--orb-x), 0, 0);
+  }
+
+  .mba-orb::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border: 1px solid rgba(10, 191, 4, 0.22);
+    border-radius: 1.1rem;
+  }
+
+  .mba-indicator {
+    position: absolute;
+    z-index: 4;
+    bottom: 0.12rem;
+    left: 0;
+    width: 1.25rem;
+    height: 0.14rem;
+    background: var(--nav-green);
+    box-shadow: 0 0 10px var(--nav-green);
+    border-radius: 10px;
+    transform: translate3d(var(--indicator-x), 0, 0);
+    pointer-events: none;
+  }
+
+  .mba-tab {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.28rem;
+    min-width: 0;
+    padding: 0.35rem 0 0.45rem;
+    border: 0;
+    background: transparent;
+    color: rgba(233, 245, 230, 0.62);
+    font-size: 0.46rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.28s ease;
+  }
+
+  .mba-tabIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    color: inherit;
+    transform: translate3d(0, -0.35rem, 0);
+    transition:
+      transform 0.35s var(--nav-ease),
+      color 0.25s ease;
+    will-change: transform;
+  }
+
+  .mba-tabIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mba-tabLabel {
+    max-width: 4.2rem;
+    line-height: 1.05;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.28s ease;
+  }
+
+  .mba-tabActive {
+    color: #e9f5e6;
+  }
+
+  .mba-tabActive .mba-tabIcon {
+    transform: translate3d(0, -0.82rem, 0);
+    color: #061408;
+  }
+
+  .mba-tabActive .mba-tabLabel {
+    color: #0abf04;
+  }
+
+  .mba-tab:focus-visible {
+    outline: 1px solid var(--nav-green);
+    outline-offset: -3px;
+    border-radius: 1rem;
+  }
+
+  .mba-motionStatic .mba-orb,
+  .mba-motionStatic .mba-orbGlow,
+  .mba-motionStatic .mba-indicator,
+  .mba-motionStatic .mba-tabIcon {
+    transition: none !important;
+  }
+
+  /* Entrada sem mexer no translateX(-50%) do posicionamento fixo */
+  @keyframes mba-barEnter {
+    from {
+      opacity: 0;
+      transform: translate3d(-50%, 14px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mba-barEnter {
+      animation: none !important;
+    }
+
+    .mba-orb,
+    .mba-orbGlow,
+    .mba-indicator,
+    .mba-tabIcon,
+    .mba-tab,
+    .mba-tabLabel {
+      transition: none !important;
+    }
+  }
+}

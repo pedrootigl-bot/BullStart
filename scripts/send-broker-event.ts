@@ -4,7 +4,7 @@
  *
  * Exemplos:
  *   npm run broker:event -- eligibility DEV-LOCAL-0001 account_funding_confirmed eligible
- *   npm run broker:event -- customer DEV-LOCAL-0002 novo@bullexstart.local "Rafael Nogueira"
+ *   npm run broker:event -- customer DEV-LOCAL-0002 novo@bullacademy.local "Rafael Nogueira"
  */
 import { randomUUID } from "node:crypto";
 import { config } from "dotenv";

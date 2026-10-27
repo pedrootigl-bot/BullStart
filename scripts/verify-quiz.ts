@@ -23,7 +23,7 @@ async function main() {
   const quiz = quizzes[0]!;
   console.log("sample:", quiz.title, "| pass:", quiz.pass_ratio, "| max:", quiz.max_attempts);
 
-  const { data: aluno } = await db.from("profiles").select("id").eq("email", "aluno@bullexstart.local").single();
+  const { data: aluno } = await db.from("profiles").select("id").eq("email", "aluno@bullacademy.local").single();
   if (!aluno) throw new Error("aluno não encontrado");
 
   await db.from("quiz_attempts").delete().eq("user_id", aluno.id);

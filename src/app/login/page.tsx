@@ -19,7 +19,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <AuthShell
       title="Acesse sua formação"
-      subtitle="Entre com o e-mail e a senha da sua conta Bullex Start."
+      subtitle="Entre com o e-mail e a senha da sua conta Bull Academy."
       footer={
         <>
           Ainda não tem conta?{" "}

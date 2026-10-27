@@ -13,7 +13,7 @@ export function AuthShell({ title, subtitle, children, footer }: { title: string
           <Logo />
         </div>
         <div className="relative max-w-md">
-          <p className="eyebrow">Formação Trader Bullex</p>
+          <p className="eyebrow">Formação Trader Bull Academy</p>
           <p className="mt-4 text-3xl leading-tight font-semibold text-balance text-mist-50">
             Sua jornada para evoluir como trader começa aqui.
           </p>

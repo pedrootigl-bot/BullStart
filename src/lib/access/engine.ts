@@ -116,7 +116,7 @@ function evaluateBrokerEligibility(
     return {
       ...base,
       state: "unlinked",
-      detail: "Sua conta Bullex Start ainda não possui vínculo verificado com a corretora.",
+      detail: "Sua conta Bull Academy ainda não possui vínculo verificado com a corretora.",
       actions: ["contact_support"],
     };
   }
@@ -196,8 +196,8 @@ function evaluateSimple(moduleId: string, rule: SimpleRule, ctx: AccessContext):
         state: met ? "met" : "not_met",
         title: "Liberação individual",
         detail: met
-          ? "Acesso liberado pela equipe Bullex Start."
-          : "Este módulo é liberado individualmente pela equipe Bullex Start.",
+          ? "Acesso liberado pela equipe Bull Academy."
+          : "Este módulo é liberado individualmente pela equipe Bull Academy.",
         actions: met ? [] : ["contact_support"],
       };
     }
@@ -263,7 +263,7 @@ export function evaluateModuleAccess(
                 type: "INVALID",
                 state: "invalid",
                 title: "Regra de acesso indisponível",
-                detail: "A regra deste módulo está em revisão pela equipe Bullex Start.",
+                detail: "A regra deste módulo está em revisão pela equipe Bull Academy.",
                 actions: ["contact_support"],
               },
         );
